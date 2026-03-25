@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Shimmer Border — Live Now</title>
+  <style>
+    /* === Reset === */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* @snippet:css */
+    @property --shimmer-angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    :root {
+      --shimmer-speed: 2.5s;
+      --shimmer-size: 3px;
+    }
+
+    @keyframes shimmer-rotate {
+      to { --shimmer-angle: 360deg; }
+    }
+
+    /* === Shimmer Border === */
+    .vsb-root {
+      position: relative;
+      width: 280px;
+      aspect-ratio: 9 / 16;
+    }
+
+    .vsb-shimmer {
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      background: conic-gradient(
+        from var(--shimmer-angle),
+        transparent 0%,
+        #7a27ec 10%,
+        #f162a0 25%,
+        #7a27ec 35%,
+        transparent 45%,
+        transparent 100%
+      );
+      animation: shimmer-rotate var(--shimmer-speed) linear infinite;
+    }
+
+    .vsb-shimmer::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 28px;
+      background: conic-gradient(
+        from var(--shimmer-angle),
+        transparent 0%,
+        #7a27ec 10%,
+        #f162a0 25%,
+        #7a27ec 35%,
+        transparent 45%,
+        transparent 100%
+      );
+      opacity: 0.4;
+      filter: blur(12px);
+      z-index: -1;
+    }
+
+    .vsb-video {
+      position: absolute;
+      inset: var(--shimmer-size, 3px);
+      border-radius: 21px;
+      overflow: hidden;
+      background: #1f1825;
+    }
+
+    .vsb-video video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .vsb-overlay {
+      position: absolute;
+      inset: 0;
+      border-radius: 21px;
+      background: linear-gradient(
+        to bottom,
+        rgba(31, 24, 37, 0.4) 0%,
+        transparent 25%,
+        transparent 75%,
+        rgba(31, 24, 37, 0.7) 100%
+      );
+      pointer-events: none;
+    }
+    /* @snippet:end */
+
+    /* === Layout === */
+    body {
+      background: #0d0d1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <!-- @snippet:html -->
+  <div class="vsb-root">
+    <div class="vsb-shimmer"></div>
+    <div class="vsb-video">
+      <video src="idle.mp4" loop muted autoplay playsinline></video>
+      <div class="vsb-overlay"></div>
+    </div>
+  </div>
+  <!-- @snippet:end -->
+</body>
+</html>
