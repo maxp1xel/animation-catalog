@@ -207,19 +207,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  background: rgba(160, 160, 255, 0.12);
-  border: 1px solid rgba(160, 160, 255, 0.2);
-  border-radius: 6px;
-  color: var(--accent);
+  background: none;
+  border: none;
+  padding: 4px;
+  color: var(--text-muted);
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: color 0.15s ease;
 }
 
 .btn-replay:hover {
-  background: rgba(160, 160, 255, 0.2);
-  color: var(--accent-hover);
+  color: var(--accent);
 }
 
 .right-column {
