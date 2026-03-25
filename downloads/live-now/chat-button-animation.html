@@ -70,24 +70,140 @@
     .icon-svg .waves-left .wave-far   { animation-delay: calc(var(--wave-stagger) * 2); }
     .icon-svg .waves-right .wave-near { animation-delay: var(--wave-stagger); }
     .icon-svg .waves-right .wave-far  { animation-delay: calc(var(--wave-stagger) * 3); }
+
+    /* === Layout === */
+    body {
+      background: var(--bg-app);
+      font-family: var(--font);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .phone-frame {
+      width: 375px;
+      height: 680px;
+      background: var(--bg-app);
+      border-radius: 32px;
+      border: 1px solid var(--border-subtle);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* === Chat Panel (bottom) === */
+    .chat-panel {
+      padding: 0 16px 20px;
+      display: flex;
+      gap: 9px;
+      align-items: center;
+    }
+
+    .go-live-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      background: linear-gradient(-34deg, var(--gradient-golive-from) 9%, var(--gradient-golive-to) 77%);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      flex-shrink: 0;
+      box-shadow: 0 0 128px rgba(0,0,0,0.18), 0 0 21px rgba(0,0,0,0.09);
+    }
+
+    .go-live-btn .icon-svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .go-live-label {
+      font-family: var(--font);
+      font-size: 8px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 14px;
+    }
+
+    .message-field {
+      flex: 1;
+      height: 44px;
+      border-radius: 12px;
+      border: 1px solid var(--border-field);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 6px 8px 12px;
+    }
+
+    .message-placeholder {
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text-primary);
+      opacity: 0.6;
+      letter-spacing: -0.14px;
+    }
+
+    .send-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background: linear-gradient(99deg, var(--gradient-btn-from) 7%, var(--gradient-btn-to) 100%);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 26px rgba(104,26,199,0.61), 0 1px 4px rgba(104,26,199,0.31);
+      flex-shrink: 0;
+    }
+
+    .send-icon {
+      width: 16px;
+      height: 16px;
+      fill: #fff;
+    }
   </style>
 </head>
-<body style="background: var(--bg-app); display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+<body>
+  <div class="phone-frame">
+    <!-- Skeleton header and content added next -->
+    <div style="flex: 1;"></div>
 
-  <!-- Temporary test: icon at 64px for visual inspection -->
-  <svg class="icon-svg" width="64" height="64" viewBox="0 0 16 16" fill="none">
-    <g class="waves-left">
-      <path class="wave-near" d="M5.5 5.5 Q4 8 5.5 10.5" />
-      <path class="wave-far"  d="M4 4 Q1.5 8 4 12" />
-    </g>
-    <g class="core">
-      <ellipse cx="8" cy="8" rx="1.8" ry="2.2" />
-    </g>
-    <g class="waves-right">
-      <path class="wave-near" d="M10.5 5.5 Q12 8 10.5 10.5" />
-      <path class="wave-far"  d="M12 4 Q14.5 8 12 12" />
-    </g>
-  </svg>
+    <!-- Chat Panel — detailed -->
+    <div class="chat-panel">
+      <button class="go-live-btn" aria-label="Go Live">
+        <svg class="icon-svg" viewBox="0 0 16 16" fill="none">
+          <g class="waves-left">
+            <path class="wave-near" d="M5.5 5.5 Q4 8 5.5 10.5" />
+            <path class="wave-far"  d="M4 4 Q1.5 8 4 12" />
+          </g>
+          <g class="core">
+            <ellipse cx="8" cy="8" rx="1.8" ry="2.2" />
+          </g>
+          <g class="waves-right">
+            <path class="wave-near" d="M10.5 5.5 Q12 8 10.5 10.5" />
+            <path class="wave-far"  d="M12 4 Q14.5 8 12 12" />
+          </g>
+        </svg>
+        <span class="go-live-label">Play</span>
+      </button>
 
+      <div class="message-field">
+        <span class="message-placeholder">Message</span>
+        <button class="send-btn" aria-label="Send">
+          <svg class="send-icon" viewBox="0 0 16 16">
+            <path d="M2 8.5l5 3.5V8.5H2zm0-1h5V4L2 7.5zm6.5 4.5l5.5-4-5.5-4v8z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
