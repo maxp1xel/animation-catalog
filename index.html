@@ -43,6 +43,173 @@
 
   <!-- Animation sections go here -->
   <div id="animations" style="display:none">
+    <section class="animation"
+      data-feature="Live Now"
+      data-name="Chat Button Animation"
+      data-duration="0.4s / 1.8s"
+      data-easing="ease-in-out / ease-out"
+      data-delay="0s, 0.15s, 0.3s (stagger)"
+      data-css-vars="--vibrate-duration, --wave-duration, --wave-stagger"
+      data-file="downloads/live-now/chat-button-animation.html">
+
+      <div class="animation-preview">
+        <style>
+          .cba-root {
+            --vibrate-duration: 0.4s;
+            --wave-duration: 1.8s;
+            --wave-stagger: 0.15s;
+            --gradient-golive-from: rgba(241,98,152,0.2);
+            --gradient-golive-to: rgba(122,39,236,0.2);
+            --gradient-btn-from: rgb(177,76,238);
+            --gradient-btn-to: rgb(128,73,243);
+            --border-field: rgba(255,255,255,0.24);
+            --font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            display: flex;
+            gap: 9px;
+            align-items: center;
+            font-family: var(--font);
+          }
+          @keyframes cba-core-vibrate {
+            0%   { transform: translate(0, 0); }
+            20%  { transform: translate(-1px, 0.5px); }
+            40%  { transform: translate(0.5px, -1px); }
+            60%  { transform: translate(-0.5px, 0.5px); }
+            80%  { transform: translate(1px, -0.5px); }
+            100% { transform: translate(0, 0); }
+          }
+          @keyframes cba-wave-pulse {
+            0%   { transform: scaleX(0.7); opacity: 0; }
+            30%  { transform: scaleX(1); opacity: 1; }
+            100% { transform: scaleX(1.1); opacity: 0; }
+          }
+          .cba-icon { display: block; }
+          .cba-icon .core {
+            fill: #fff;
+            animation: cba-core-vibrate var(--vibrate-duration) ease-in-out infinite;
+          }
+          .cba-icon .wave-near,
+          .cba-icon .wave-far {
+            fill: none; stroke: #fff; stroke-width: 1.2; stroke-linecap: round;
+            transform-origin: center;
+            animation: cba-wave-pulse var(--wave-duration) ease-out infinite;
+          }
+          .cba-root .waves-left .wave-near  { animation-delay: 0s; }
+          .cba-root .waves-left .wave-far   { animation-delay: calc(var(--wave-stagger) * 2); }
+          .cba-root .waves-right .wave-near { animation-delay: var(--wave-stagger); }
+          .cba-root .waves-right .wave-far  { animation-delay: calc(var(--wave-stagger) * 3); }
+          .cba-btn {
+            width: 44px; height: 44px; border-radius: 16px;
+            background: linear-gradient(-34deg, var(--gradient-golive-from) 9%, var(--gradient-golive-to) 77%);
+            border: none; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 1px; flex-shrink: 0;
+            box-shadow: 0 0 128px rgba(0,0,0,0.18), 0 0 21px rgba(0,0,0,0.09);
+          }
+          .cba-btn .cba-icon { width: 16px; height: 16px; }
+          .cba-label { font-size: 8px; font-weight: 500; color: #fff; line-height: 14px; }
+          .cba-field {
+            flex: 1; height: 44px; border-radius: 12px;
+            border: 1px solid var(--border-field); background: transparent;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 6px 8px 12px;
+          }
+          .cba-placeholder { font-size: 14px; color: #fff; opacity: 0.6; }
+          .cba-send {
+            width: 32px; height: 32px; border-radius: 12px;
+            background: linear-gradient(99deg, var(--gradient-btn-from) 7%, var(--gradient-btn-to) 100%);
+            border: none; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 5px 26px rgba(104,26,199,0.61), 0 1px 4px rgba(104,26,199,0.31);
+            flex-shrink: 0;
+          }
+          .cba-send svg { width: 16px; height: 16px; fill: #fff; }
+        </style>
+        <div class="cba-root">
+          <button class="cba-btn">
+            <svg class="cba-icon" viewBox="0 0 16 16" fill="none">
+              <g class="waves-left">
+                <path class="wave-near" d="M5.5 5.5 Q4 8 5.5 10.5" />
+                <path class="wave-far"  d="M4 4 Q1.5 8 4 12" />
+              </g>
+              <g class="core">
+                <ellipse cx="8" cy="8" rx="1.8" ry="2.2" />
+              </g>
+              <g class="waves-right">
+                <path class="wave-near" d="M10.5 5.5 Q12 8 10.5 10.5" />
+                <path class="wave-far"  d="M12 4 Q14.5 8 12 12" />
+              </g>
+            </svg>
+            <span class="cba-label">Play</span>
+          </button>
+          <div class="cba-field">
+            <span class="cba-placeholder">Message</span>
+            <button class="cba-send">
+              <svg viewBox="0 0 16 16"><path d="M2 8.5l5 3.5V8.5H2zm0-1h5V4L2 7.5zm6.5 4.5l5.5-4-5.5-4v8z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <template class="animation-css">
+:root {
+  --vibrate-duration: 0.4s;
+  --wave-duration: 1.8s;
+  --wave-stagger: 0.15s;
+}
+
+@keyframes core-vibrate {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(-1px, 0.5px); }
+  40%  { transform: translate(0.5px, -1px); }
+  60%  { transform: translate(-0.5px, 0.5px); }
+  80%  { transform: translate(1px, -0.5px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes wave-pulse {
+  0%   { transform: scaleX(0.7); opacity: 0; }
+  30%  { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(1.1); opacity: 0; }
+}
+
+.icon-svg { display: block; }
+
+.icon-svg .core {
+  fill: #fff;
+  animation: core-vibrate var(--vibrate-duration) ease-in-out infinite;
+}
+
+.icon-svg .wave-near,
+.icon-svg .wave-far {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  transform-origin: center;
+  animation: wave-pulse var(--wave-duration) ease-out infinite;
+}
+
+.icon-svg .waves-left .wave-near  { animation-delay: 0s; }
+.icon-svg .waves-left .wave-far   { animation-delay: calc(var(--wave-stagger) * 2); }
+.icon-svg .waves-right .wave-near { animation-delay: var(--wave-stagger); }
+.icon-svg .waves-right .wave-far  { animation-delay: calc(var(--wave-stagger) * 3); }
+      </template>
+
+      <template class="animation-html">
+<svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none">
+  <g class="waves-left">
+    <path class="wave-near" d="M5.5 5.5 Q4 8 5.5 10.5" />
+    <path class="wave-far"  d="M4 4 Q1.5 8 4 12" />
+  </g>
+  <g class="core">
+    <ellipse cx="8" cy="8" rx="1.8" ry="2.2" />
+  </g>
+  <g class="waves-right">
+    <path class="wave-near" d="M10.5 5.5 Q12 8 10.5 10.5" />
+    <path class="wave-far"  d="M12 4 Q14.5 8 12 12" />
+  </g>
+</svg>
+      </template>
+    </section>
   </div>
 
   <script src="catalog.js"></script>
