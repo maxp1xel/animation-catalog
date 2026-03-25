@@ -47,9 +47,47 @@
       30%  { transform: scaleX(1); opacity: 1; }
       100% { transform: scaleX(1.1); opacity: 0; }
     }
+
+    /* === Icon Animation === */
+    .icon-svg { display: block; }
+
+    .icon-svg .core {
+      fill: #fff;
+      animation: core-vibrate var(--vibrate-duration) ease-in-out infinite;
+    }
+
+    .icon-svg .wave-near,
+    .icon-svg .wave-far {
+      fill: none;
+      stroke: #fff;
+      stroke-width: 1.2;
+      stroke-linecap: round;
+      transform-origin: center;
+      animation: wave-pulse var(--wave-duration) ease-out infinite;
+    }
+
+    .icon-svg .waves-left .wave-near  { animation-delay: 0s; }
+    .icon-svg .waves-left .wave-far   { animation-delay: calc(var(--wave-stagger) * 2); }
+    .icon-svg .waves-right .wave-near { animation-delay: var(--wave-stagger); }
+    .icon-svg .waves-right .wave-far  { animation-delay: calc(var(--wave-stagger) * 3); }
   </style>
 </head>
-<body>
-  <!-- Content added in subsequent tasks -->
+<body style="background: var(--bg-app); display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+
+  <!-- Temporary test: icon at 64px for visual inspection -->
+  <svg class="icon-svg" width="64" height="64" viewBox="0 0 16 16" fill="none">
+    <g class="waves-left">
+      <path class="wave-near" d="M5.5 5.5 Q4 8 5.5 10.5" />
+      <path class="wave-far"  d="M4 4 Q1.5 8 4 12" />
+    </g>
+    <g class="core">
+      <ellipse cx="8" cy="8" rx="1.8" ry="2.2" />
+    </g>
+    <g class="waves-right">
+      <path class="wave-near" d="M10.5 5.5 Q12 8 10.5 10.5" />
+      <path class="wave-far"  d="M12 4 Q14.5 8 12 12" />
+    </g>
+  </svg>
+
 </body>
 </html>
