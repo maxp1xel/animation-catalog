@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Button Animation — Live Now</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
+  <style>
+    /* === Tokens === */
+    :root {
+      --vibrate-duration: 0.4s;
+      --wave-duration: 1.8s;
+      --wave-stagger: 0.15s;
+
+      --bg-app: #1f1825;
+      --bg-header: rgba(255,255,255,0.06);
+      --bg-bubble-model: rgba(255,255,255,0.06);
+      --bg-bubble-user-from: rgba(177,76,238,0.5);
+      --bg-bubble-user-to: rgba(128,73,243,0.5);
+      --border-subtle: rgba(255,255,255,0.12);
+      --border-field: rgba(255,255,255,0.24);
+      --text-primary: #fff;
+      --text-secondary: rgba(255,255,255,0.6);
+      --text-muted: #9b9caa;
+      --gradient-btn-from: rgb(177,76,238);
+      --gradient-btn-to: rgb(128,73,243);
+      --gradient-golive-from: rgba(241,98,152,0.2);
+      --gradient-golive-to: rgba(122,39,236,0.2);
+      --font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* === Reset === */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* === Keyframes === */
+    @keyframes core-vibrate {
+      0%   { transform: translate(0, 0); }
+      20%  { transform: translate(-1px, 0.5px); }
+      40%  { transform: translate(0.5px, -1px); }
+      60%  { transform: translate(-0.5px, 0.5px); }
+      80%  { transform: translate(1px, -0.5px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    @keyframes wave-pulse {
+      0%   { transform: scaleX(0.7); opacity: 0; }
+      30%  { transform: scaleX(1); opacity: 1; }
+      100% { transform: scaleX(1.1); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Content added in subsequent tasks -->
+</body>
+</html>
