@@ -16,7 +16,8 @@
 ├── catalog.js          # Навигация, replay, copy, download
 ├── downloads/          # Standalone HTML-файлы (источник правды)
 │   ├── live-now/
-│   │   └── chat-button-animation.html
+│   │   ├── chat-button-animation.html
+│   │   └── content-to-counter.html
 │   └── <feature>/
 │       └── <animation-name>.html
 ├── docs/               # Спеки и проектная документация
