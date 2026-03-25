@@ -212,16 +212,14 @@ body {
   background: var(--bg-preview);
   border: 1px solid var(--border);
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 24px;
   position: relative;
   overflow: hidden;
 }
 
 .preview-iframe {
   width: 100%;
-  height: 500px; /* default, overridden by JS after load */
+  height: 812px;
   border: none;
   border-radius: 4px;
   background: transparent;
