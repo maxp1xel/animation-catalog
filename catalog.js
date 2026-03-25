@@ -145,6 +145,12 @@
       iframe.className = 'preview-iframe';
       iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts');
       iframe.setAttribute('loading', 'lazy');
+      iframe.addEventListener('load', function () {
+        try {
+          const h = iframe.contentDocument.documentElement.scrollHeight;
+          if (h) iframe.style.height = h + 'px';
+        } catch (e) { /* cross-origin fallback: keep default height */ }
+      });
       preview.appendChild(iframe);
       return;
     }
