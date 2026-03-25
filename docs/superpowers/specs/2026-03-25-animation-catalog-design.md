@@ -90,61 +90,77 @@ Displays the selected animation's card. Sections from top to bottom:
 
 ## Animation Data Format
 
-Each animation is a `<section>` in `index.html` with data attributes:
+Two modes are supported: **file-based** (recommended) and **template-based** (inline).
+
+### File-based (recommended)
+
+The standalone file in `downloads/` is the single source of truth. `catalog.js` loads it as an iframe preview and extracts code snippets via `@snippet` markers. No duplication.
 
 ```html
 <section class="animation"
-  data-feature="onboarding"
-  data-name="Card Entrance"
-  data-duration="0.3s"
-  data-easing="ease-out"
-  data-delay="0s"
-  data-css-vars="--card-duration, --card-ease"
-  data-file="downloads/onboarding/card-entrance.html">
-
-  <div class="animation-preview">
-    <!-- Live preview HTML -->
-  </div>
-
-  <!-- Code is stored in <template> tags to prevent execution and preserve raw text -->
-  <template class="animation-css">
-@keyframes cardEntrance {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.card { animation: cardEntrance var(--card-duration, 0.3s) var(--card-ease, ease-out); }
-  </template>
-
-  <template class="animation-html">
-<div class="card">
-  <h3>Welcome</h3>
-  <p>Get started...</p>
-</div>
-  </template>
-
-  <template class="animation-js">
-// Optional JS for this animation
-const observer = new IntersectionObserver(
-  entries => entries.forEach(e =>
-    e.target.classList.toggle('visible', e.isIntersecting)
-  )
-);
-  </template>
+  data-feature="Live Now"
+  data-name="Chat Button Animation"
+  data-duration="0.4s / 1.8s"
+  data-easing="ease-in-out / ease-out"
+  data-delay="0s, 0.15s, 0.3s (stagger)"
+  data-css-vars="--vibrate-duration, --wave-duration, --wave-stagger"
+  data-file="downloads/live-now/chat-button-animation.html">
 </section>
 ```
 
-**Code extraction:** `catalog.js` reads `.textContent` from each `<template>` element (`.animation-css`, `.animation-html`, `.animation-js`). This gives clean raw code without any wrapping tags. The code is displayed in `<pre><code>` blocks. If `.animation-js` template is empty or absent, the JS code block is hidden.
+The standalone file uses `@snippet` markers to delineate extractable code:
 
-**Preview rendering:** The preview is built by injecting a `<style>` with the CSS template content and the HTML template content into `.animation-preview`. This keeps the animation live while the raw code stays in `<template>` for display and copy.
+```css
+/* @snippet:css */
+@keyframes myAnimation { ... }
+.my-class { ... }
+/* @snippet:end */
+```
+
+```html
+<!-- @snippet:html -->
+<div class="my-class">...</div>
+<!-- @snippet:end -->
+```
+
+When `data-file` is present, `catalog.js`:
+1. Renders an `<iframe>` pointing to the file for live preview
+2. Fetches the file and extracts text between `@snippet:css`, `@snippet:html`, `@snippet:js` markers
+3. Displays extracted code in `<pre><code>` blocks with Copy buttons
+
+### Template-based (inline)
+
+For animations without a standalone file, code lives in `<template>` tags inside the section:
+
+```html
+<section class="animation" data-feature="..." data-name="..." ...>
+  <template class="animation-css">/* CSS */</template>
+  <template class="animation-html"><!-- HTML --></template>
+  <template class="animation-js">// JS (optional)</template>
+</section>
+```
+
+`catalog.js` reads `.textContent` from each template, injects CSS + HTML into the preview area, and displays code in `<pre><code>` blocks.
+
+### Sidebar
 
 The sidebar navigation is built automatically by `catalog.js` — it reads all `<section class="animation">` elements, groups them by `data-feature`, and generates the sidebar tree. Features appear in source order (the order `<section>` elements appear in `index.html`), giving the author full control over sidebar ordering.
 
 ## Adding a New Animation
 
-1. Add a new `<section class="animation" data-feature="..." data-name="..." ...>` to `index.html`
-2. Create a standalone HTML file in `downloads/<feature>/<name>.html` — fully self-contained with inline styles and scripts. The standalone file must contain the same CSS, HTML, and JS as the `<template>` tags in `index.html` — this is a manual duplication; keep both in sync when updating.
+### File-based (recommended)
+
+1. Create a standalone HTML file in `downloads/<feature>/<name>.html` with `@snippet` markers around the CSS and HTML code that developers should copy
+2. Add a `<section class="animation" data-file="downloads/..." ...>` to `index.html` (just data attributes, no templates)
 3. Push to `main` — GH Actions deploys automatically
-4. Sidebar updates automatically (built from data attributes)
+
+### Template-based
+
+1. Add a `<section>` with `<template>` blocks to `index.html`
+2. Optionally create a standalone file in `downloads/` (manual sync required)
+3. Push to `main`
+
+Sidebar updates automatically in both cases (built from data attributes).
 
 ## Visual Design
 

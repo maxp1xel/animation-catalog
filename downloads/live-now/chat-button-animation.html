@@ -32,7 +32,7 @@
     /* === Reset === */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* === Keyframes === */
+    /* @snippet:css */
     @keyframes core-vibrate {
       0%   { transform: translate(0, 0); }
       20%  { transform: translate(-1px, 0.5px); }
@@ -70,6 +70,7 @@
     .icon-svg .waves-left .wave-far   { animation-delay: calc(var(--wave-stagger) * 2); }
     .icon-svg .waves-right .wave-near { animation-delay: var(--wave-stagger); }
     .icon-svg .waves-right .wave-far  { animation-delay: calc(var(--wave-stagger) * 3); }
+    /* @snippet:end */
 
     /* === Layout === */
     body {
@@ -264,6 +265,7 @@
 
     <!-- Chat Panel — detailed -->
     <div class="chat-panel">
+      <!-- @snippet:html -->
       <button class="go-live-btn" aria-label="Go Live">
         <svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none">
           <g class="waves-left">
@@ -289,6 +291,7 @@
           </svg>
         </button>
       </div>
+      <!-- @snippet:end -->
     </div>
   </div>
 </body>

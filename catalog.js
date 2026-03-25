@@ -120,19 +120,35 @@
     // Spec
     renderSpec(el);
 
-    // Code blocks
-    renderCodeBlocks(el);
+    // Code blocks — file-based (fetch snippets) or template-based
+    if (file) {
+      renderCodeBlocksFromFile(file);
+    } else {
+      renderCodeBlocks(el);
+    }
   }
 
   // --- Preview ---
   function renderPreview(anim) {
     const preview = document.getElementById('preview');
     const el = anim.el;
+    const file = el.dataset.file;
 
     // Clear previous
     preview.innerHTML = '';
 
-    // Inject CSS
+    // File-based: use iframe
+    if (file) {
+      const iframe = document.createElement('iframe');
+      iframe.src = file;
+      iframe.className = 'preview-iframe';
+      iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts');
+      iframe.setAttribute('loading', 'lazy');
+      preview.appendChild(iframe);
+      return;
+    }
+
+    // Template-based fallback
     const cssTemplate = el.querySelector('.animation-css');
     if (cssTemplate) {
       const style = document.createElement('style');
@@ -140,7 +156,6 @@
       preview.appendChild(style);
     }
 
-    // Inject HTML
     const htmlTemplate = el.querySelector('.animation-html');
     if (htmlTemplate) {
       const container = document.createElement('div');
@@ -148,7 +163,6 @@
       preview.appendChild(container);
     }
 
-    // Inject JS
     const jsTemplate = el.querySelector('.animation-js');
     if (jsTemplate && jsTemplate.content.textContent.trim()) {
       const script = document.createElement('script');
@@ -181,7 +195,39 @@
       ).join('') + '</div>';
   }
 
-  // --- Code Blocks ---
+  // --- Code Blocks from file (snippet markers) ---
+  function renderCodeBlocksFromFile(file) {
+    const container = document.getElementById('code-blocks');
+    container.innerHTML = '';
+
+    fetch(file)
+      .then(r => r.text())
+      .then(text => {
+        const snippets = extractSnippets(text);
+        const labels = { css: 'CSS', html: 'HTML', js: 'JavaScript' };
+
+        Object.keys(snippets).forEach(type => {
+          const code = snippets[type];
+          if (!code) return;
+          appendCodeBlock(container, labels[type] || type, code);
+        });
+      });
+  }
+
+  // Extract content between @snippet markers
+  // Supports: /* @snippet:css */ ... /* @snippet:end */
+  //           <!-- @snippet:html --> ... <!-- @snippet:end -->
+  function extractSnippets(text) {
+    const snippets = {};
+    const regex = /(?:\/\*|<!--)\s*@snippet:(\w+)\s*(?:\*\/|-->)([\s\S]*?)(?:\/\*|<!--)\s*@snippet:end\s*(?:\*\/|-->)/g;
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+      snippets[match[1]] = match[2].trim();
+    }
+    return snippets;
+  }
+
+  // --- Code Blocks from templates ---
   function renderCodeBlocks(el) {
     const container = document.getElementById('code-blocks');
     container.innerHTML = '';
@@ -201,31 +247,35 @@
         : template.content.textContent.trim();
 
       if (!code) return;
-
-      const block = document.createElement('div');
-      block.className = 'code-block';
-      block.innerHTML =
-        '<div class="code-block-header">' +
-          '<span class="code-block-lang">' + label + '</span>' +
-          '<button class="btn-copy">Copy</button>' +
-        '</div>' +
-        '<pre><code></code></pre>';
-
-      block.querySelector('code').textContent = code;
-
-      block.querySelector('.btn-copy').addEventListener('click', function () {
-        navigator.clipboard.writeText(code).then(() => {
-          this.textContent = 'Copied!';
-          this.classList.add('copied');
-          setTimeout(() => {
-            this.textContent = 'Copy';
-            this.classList.remove('copied');
-          }, 1500);
-        });
-      });
-
-      container.appendChild(block);
+      appendCodeBlock(container, label, code);
     });
+  }
+
+  // --- Shared: append a code block with Copy ---
+  function appendCodeBlock(container, label, code) {
+    const block = document.createElement('div');
+    block.className = 'code-block';
+    block.innerHTML =
+      '<div class="code-block-header">' +
+        '<span class="code-block-lang">' + label + '</span>' +
+        '<button class="btn-copy">Copy</button>' +
+      '</div>' +
+      '<pre><code></code></pre>';
+
+    block.querySelector('code').textContent = code;
+
+    block.querySelector('.btn-copy').addEventListener('click', function () {
+      navigator.clipboard.writeText(code).then(() => {
+        this.textContent = 'Copied!';
+        this.classList.add('copied');
+        setTimeout(() => {
+          this.textContent = 'Copy';
+          this.classList.remove('copied');
+        }, 1500);
+      });
+    });
+
+    container.appendChild(block);
   }
 
   // --- Hash routing ---

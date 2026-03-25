@@ -14,7 +14,7 @@ Do not let documentation drift from the actual implementation. If you add a feat
 - No build step. Everything is plain HTML + CSS + JS.
 - All internal links must be relative (no leading `/`).
 - Animations are organized by product features, not by animation type.
-- Standalone files in `downloads/` must stay in sync with `<template>` content in `index.html`.
+- Standalone files in `downloads/` are the source of truth. Use `@snippet` markers (`/* @snippet:css */`, `<!-- @snippet:html -->`, `<!-- @snippet:end -->`) to delineate code that catalog.js extracts for Copy blocks. When `data-file` is set on a `<section>`, catalog.js uses iframe preview and fetches snippets from the file — no `<template>` duplication needed.
 - Dark theme only. Color tokens: `#0d0d1a` (preview bg), `#1a1a2e` (page bg), `#12122a` (sidebar bg), `#a0a0ff` (accent).
 
 ## Deployment

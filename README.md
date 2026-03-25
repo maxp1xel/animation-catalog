@@ -14,11 +14,11 @@
 ├── index.html          # Каталог — единая страница
 ├── styles.css          # Тёмная тема
 ├── catalog.js          # Навигация, replay, copy, download
-├── downloads/          # Standalone HTML-файлы для скачивания
-│   ├── onboarding/
-│   │   └── card-entrance.html
-│   └── dashboard/
-│       └── chart-reveal.html
+├── downloads/          # Standalone HTML-файлы (источник правды)
+│   ├── live-now/
+│   │   └── chat-button-animation.html
+│   └── <feature>/
+│       └── <animation-name>.html
 ├── docs/               # Спеки и проектная документация
 ├── .github/workflows/  # CI/CD
 └── AGENTS.md           # Инструкции для AI-агентов
@@ -26,37 +26,56 @@
 
 ## Как добавить анимацию
 
-1. В `index.html` добавить секцию:
+### Способ 1: File-based (рекомендуемый)
+
+Standalone-файл — единственный источник правды. Каталог автоматически подтягивает превью (iframe) и код (по маркерам `@snippet`).
+
+1. Создать standalone-файл `downloads/<feature>/<name>.html` — самодостаточный HTML с инлайн-стилями. Разметить сниппеты маркерами:
+
+```css
+/* @snippet:css */
+@keyframes myAnimation { ... }
+.my-class { animation: myAnimation 0.3s ease-out; }
+/* @snippet:end */
+```
+
+```html
+<!-- @snippet:html -->
+<div class="my-class">...</div>
+<!-- @snippet:end -->
+```
+
+2. В `index.html` добавить секцию (только data-атрибуты, без шаблонов):
 
 ```html
 <section class="animation"
-  data-feature="onboarding"
-  data-name="Card Entrance"
+  data-feature="Feature Name"
+  data-name="Animation Name"
   data-duration="0.3s"
   data-easing="ease-out"
   data-delay="0s"
-  data-css-vars="--card-duration, --card-ease"
-  data-file="downloads/onboarding/card-entrance.html">
-
-  <div class="animation-preview">
-    <!-- HTML для живого превью -->
-  </div>
-
-  <template class="animation-css">
-    /* CSS анимации */
-  </template>
-
-  <template class="animation-html">
-    <!-- HTML разметка -->
-  </template>
-
-  <template class="animation-js">
-    // JS (опционально)
-  </template>
+  data-css-vars="--my-var"
+  data-file="downloads/feature/animation-name.html">
 </section>
 ```
 
-2. Создать standalone-файл в `downloads/<feature>/<name>.html` — полностью самодостаточный HTML с инлайн-стилями и скриптами. Код в standalone-файле должен совпадать с `<template>` в `index.html`.
+`catalog.js` сам: покажет iframe-превью, извлечёт CSS/HTML сниппеты из маркеров, покажет блоки кода с кнопкой Copy.
+
+### Способ 2: Template-based (inline)
+
+Для анимаций без standalone-файла — код прямо в `<template>` тегах:
+
+```html
+<section class="animation" data-feature="..." data-name="..." ...>
+  <template class="animation-css">/* CSS */</template>
+  <template class="animation-html"><!-- HTML --></template>
+  <template class="animation-js">// JS (опционально)</template>
+</section>
+```
+
+---
+
+В обоих случаях: standalone-файл в `downloads/<feature>/<name>.html` — полностью самодостаточный HTML с инлайн-стилями и скриптами.
 
 3. Пушнуть в `main` — GH Actions задеплоит автоматически.
 
