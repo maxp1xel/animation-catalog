@@ -76,6 +76,14 @@
 | Download | Скачивание standalone HTML-файла |
 | Deep links | URL-хеш обновляется при выборе (`#onboarding/card-entrance`) |
 
+## Локальная разработка
+
+```bash
+python3 -m http.server 8080
+```
+
+Открыть http://localhost:8080 в браузере. `Ctrl+C` — остановить.
+
 ## Деплой
 
 Push в `main` → GitHub Actions → rsync в `/animations/` на сервере.
