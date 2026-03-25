@@ -136,7 +136,7 @@
     const cssTemplate = el.querySelector('.animation-css');
     if (cssTemplate) {
       const style = document.createElement('style');
-      style.textContent = cssTemplate.textContent;
+      style.textContent = cssTemplate.content.textContent;
       preview.appendChild(style);
     }
 
@@ -150,9 +150,9 @@
 
     // Inject JS
     const jsTemplate = el.querySelector('.animation-js');
-    if (jsTemplate && jsTemplate.textContent.trim()) {
+    if (jsTemplate && jsTemplate.content.textContent.trim()) {
       const script = document.createElement('script');
-      script.textContent = jsTemplate.textContent;
+      script.textContent = jsTemplate.content.textContent;
       preview.appendChild(script);
     }
   }
@@ -198,7 +198,7 @@
 
       const code = selector === '.animation-html'
         ? template.innerHTML.trim()
-        : template.textContent.trim();
+        : template.content.textContent.trim();
 
       if (!code) return;
 
