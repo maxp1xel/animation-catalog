@@ -246,7 +246,7 @@
       min-height: 100vh;
     }
 
-    /* --- Phone frame --- */
+    /* --- Phone frame (375x812 scaled to fit 500px iframe) --- */
     .ctc-root {
       position: relative;
       width: 375px;
@@ -259,6 +259,14 @@
       color: white;
       display: flex;
       flex-direction: column;
+      transform: scale(var(--ctc-frame-scale, 1));
+      transform-origin: top center;
+    }
+
+    /* Scale down when inside an iframe (catalog preview is 500px tall) */
+    @media (max-height: 600px) {
+      :root { --ctc-frame-scale: 0.59; }
+      body { justify-content: flex-start; align-items: center; padding-top: 8px; }
     }
 
     /* --- Status bar skeleton --- */
