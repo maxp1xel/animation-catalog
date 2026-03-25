@@ -195,9 +195,6 @@ body {
 
 .preview-section {
   min-width: 0;
-  position: sticky;
-  top: 24px;
-  align-self: start;
 }
 
 .right-column {
