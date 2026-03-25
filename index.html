@@ -25,7 +25,6 @@
           <span class="card-feature" id="card-feature"></span>
         </div>
         <div class="card-actions">
-          <button class="btn" id="btn-replay">▶ Replay</button>
           <a class="btn" id="btn-download" download>⬇ Download HTML</a>
         </div>
       </div>
@@ -33,7 +32,14 @@
       <!-- Two-column layout -->
       <div class="card-body">
         <div class="preview-section">
-          <div class="section-label">Preview</div>
+          <div class="preview-header">
+            <div class="section-label">Preview</div>
+            <button class="btn-replay" id="btn-replay" title="Replay">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 8a6 6 0 0 1 10.472-4H10.5a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-1 0v1.47A7 7 0 1 0 15 8a.5.5 0 0 0-1 0 6 6 0 1 1-12 0z" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
           <div class="preview" id="preview"></div>
         </div>
 

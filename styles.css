@@ -197,6 +197,31 @@ body {
   min-width: 0;
 }
 
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-replay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: rgba(160, 160, 255, 0.12);
+  border: 1px solid rgba(160, 160, 255, 0.2);
+  border-radius: 6px;
+  color: var(--accent);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-replay:hover {
+  background: rgba(160, 160, 255, 0.2);
+  color: var(--accent-hover);
+}
+
 .right-column {
   display: flex;
   flex-direction: column;
