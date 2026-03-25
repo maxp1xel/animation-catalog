@@ -125,10 +125,11 @@ body {
 
 /* === Main Content === */
 .content {
-  margin-left: var(--sidebar-width);
-  flex: 1;
   padding: 24px 32px;
   max-width: 1100px;
+  width: 100%;
+  margin-left: max(var(--sidebar-width), calc((100vw - 1100px) / 2));
+  margin-right: auto;
 }
 
 /* === Card === */
