@@ -22,7 +22,7 @@
             }
 
             :root {
-                --shimmer-speed: 2.5s;
+                --shimmer-speed: 1.5s;
                 --shimmer-size: 4px;
             }
 
@@ -42,7 +42,9 @@
                 padding: 0;
                 position: relative;
                 overflow: hidden;
-                box-shadow: 0 0 40px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
+                box-shadow:
+                    0 0 40px rgba(0, 0, 0, 0.6),
+                    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
             }
 
             /* === Shimmer Border === */
@@ -142,7 +144,13 @@
             <!-- @snippet:html -->
             <div class="vsb-root">
                 <div class="vsb-video">
-                    <video src="idle.mp4" loop muted autoplay playsinline></video>
+                    <video
+                        src="idle.mp4"
+                        loop
+                        muted
+                        autoplay
+                        playsinline
+                    ></video>
                     <div class="vsb-overlay"></div>
                 </div>
                 <div class="vsb-shimmer"></div>

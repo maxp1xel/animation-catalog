@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chat Button Animation — Live Now</title>
+  <title>Chat Button Vibrating Effect — Live Now</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
   <style>
     /* === Tokens === */
@@ -30,16 +30,16 @@
 
     /* @snippet:css */
     @keyframes core-vibrate {
-      0%, 25%, 100% { transform: translate(0, 0); }
-      2.5%  { transform: translate(-0.7px, 0.4px); }
-      5%    { transform: translate(0.5px, -0.7px); }
-      7.5%  { transform: translate(-0.7px, 0.5px); }
-      10%   { transform: translate(0.5px, -0.5px); }
-      12.5% { transform: translate(-0.5px, 0.7px); }
-      15%   { transform: translate(0.7px, -0.4px); }
-      17.5% { transform: translate(-0.4px, 0.5px); }
-      20%   { transform: translate(0.4px, -0.4px); }
-      22.5% { transform: translate(-0.2px, 0.2px); }
+      0%, 25%, 100% { transform: translate(0, 0) rotate(0deg); }
+      2.5%  { transform: translate(-0.6px, 0.35px) rotate(-1.8deg); }
+      5%    { transform: translate(0.5px, -0.6px) rotate(2.1deg); }
+      7.5%  { transform: translate(-0.6px, 0.5px) rotate(-2.0deg); }
+      10%   { transform: translate(0.5px, -0.5px) rotate(1.9deg); }
+      12.5% { transform: translate(-0.5px, 0.6px) rotate(-2.1deg); }
+      15%   { transform: translate(0.6px, -0.35px) rotate(1.7deg); }
+      17.5% { transform: translate(-0.35px, 0.5px) rotate(-1.6deg); }
+      20%   { transform: translate(0.35px, -0.35px) rotate(1.6deg); }
+      22.5% { transform: translate(-0.2px, 0.2px) rotate(-0.8deg); }
     }
 
     @keyframes wave-expand {
@@ -60,7 +60,7 @@
     .icon-svg .wave-far {
       fill: none;
       stroke: #fff;
-      stroke-width: 1.2;
+      stroke-width: 1;
       stroke-linecap: round;
       transform-box: view-box;
       transform-origin: center;
@@ -85,7 +85,7 @@
 
     .phone-frame {
       width: 375px;
-      height: 680px;
+      height: 812px;
       background: var(--bg-app);
       border-radius: 32px;
       border: 1px solid var(--border-subtle);
@@ -107,7 +107,7 @@
       position: relative;
       width: 44px;
       height: 44px;
-      border-radius: 16px;
+      border-radius: 12px;
       border: none;
       overflow: hidden;
       background:
@@ -163,7 +163,7 @@
       content: "";
       position: absolute;
       inset: 0;
-      border-radius: 16px;
+      border-radius: 12px;
       padding: 1px;
       background: linear-gradient(
         135deg,
@@ -205,7 +205,13 @@
       height: 44px;
       border-radius: 12px;
       border: 1px solid var(--border-field);
-      background: transparent;
+      background:
+        radial-gradient(
+          ellipse at 25px 0px,
+          rgba(244, 235, 255, 0.16) 0%,
+          rgba(235, 235, 255, 0.06) 50%,
+          transparent 80%
+        );
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -235,9 +241,8 @@
     }
 
     .send-icon {
-      width: 16px;
-      height: 16px;
-      fill: #fff;
+      width: 12px;
+      height: 14px;
     }
 
     /* === Skeleton === */
@@ -340,16 +345,16 @@
         <span class="blob-pink"></span>
         <svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none">
           <g class="waves-left">
-            <path class="wave-near" d="M5.5 5.5 Q4 8 5.5 10.5" />
-            <path class="wave-far"  d="M4 4 Q1.5 8 4 12" />
+            <path class="wave-near" d="M4.5 5 Q2.5 8 4.5 11" />
+            <path class="wave-far"  d="M2.5 3 Q-0.5 8 2.5 13" />
           </g>
           <g class="core">
             <path d="M5.40065 12.2984C5.52373 12.1754 5.63474 12.1261 5.77375 12.0894C6.11312 12.0181 6.44353 11.8452 6.71557 11.5733C7.05955 11.2293 7.24472 10.792 7.2675 10.3609C7.30247 10.1418 7.42629 9.90194 7.62877 9.69934C7.8132 9.51515 8.02875 9.39581 8.2311 9.34951C8.51347 9.29949 8.78564 9.16434 9.00628 8.94319C9.2853 8.6643 9.42854 8.30229 9.43439 7.94276C9.45753 7.69598 9.59268 7.41721 9.8249 7.18474C10.0202 6.98936 10.2482 6.86304 10.4622 6.81364C10.4965 6.80903 10.531 6.80306 10.5654 6.79547C10.5674 6.79522 10.5689 6.7946 10.5707 6.7946C10.7856 6.74532 10.991 6.63605 11.1599 6.46693C11.4207 6.20633 11.5392 5.85925 11.5143 5.52523C11.5087 5.36009 11.5932 5.16122 11.7557 4.99869C11.8906 4.86366 12.0507 4.78252 12.1961 4.76187C12.4728 4.74332 12.7598 4.61664 12.989 4.38753C13.4379 3.93852 13.5799 3.17992 13.2001 2.79998C12.82 2.42004 12.0621 2.56237 11.6131 3.01151C11.3878 3.23676 11.2617 3.51801 11.2396 3.79055C11.2222 3.93889 11.1401 4.10503 11.0008 4.24391C10.8324 4.41242 10.6245 4.49804 10.4562 4.48509C10.1283 4.46618 9.78993 4.58515 9.53444 4.84077C9.36532 5.00977 9.25643 5.21573 9.20714 5.43052L9.2054 5.42916C9.20416 5.44085 9.20154 5.4528 9.1998 5.46487C9.19594 5.48553 9.19221 5.50631 9.1891 5.52672C9.14181 5.74426 9.01425 5.9766 8.81538 6.17535C8.57943 6.4113 8.29606 6.54732 8.04679 6.56736C7.69112 6.57632 7.33445 6.71943 7.0583 6.99546C6.84263 7.2115 6.70835 7.47695 6.65571 7.75235C6.61265 7.96005 6.49107 8.18232 6.30153 8.37198C6.09781 8.5762 5.85588 8.70077 5.63549 8.73437L5.63623 8.73524C5.20701 8.75876 4.77194 8.94456 4.42934 9.28704C4.16202 9.55436 3.99078 9.87842 3.91699 10.2117C3.88861 10.3307 3.79304 10.4865 3.70007 10.5977L5.40065 12.2984Z" fill="white"/>
             <path d="M3.43692 10.8606L5.13863 12.5629L4.10173 13.6001L2.40002 11.8979L3.43692 10.8606Z" fill="white"/>
           </g>
           <g class="waves-right">
-            <path class="wave-near" d="M10.5 5.5 Q12 8 10.5 10.5" />
-            <path class="wave-far"  d="M12 4 Q14.5 8 12 12" />
+            <path class="wave-near" d="M11.5 5 Q13.5 8 11.5 11" />
+            <path class="wave-far"  d="M13.5 3 Q16.5 8 13.5 13" />
           </g>
         </svg>
         <span class="go-live-label">Play</span>
@@ -358,8 +363,8 @@
       <div class="message-field">
         <span class="message-placeholder">Message</span>
         <button class="send-btn" aria-label="Send">
-          <svg class="send-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-            <path d="M2 8.5l5 3.5V8.5H2zm0-1h5V4L2 7.5zm6.5 4.5l5.5-4-5.5-4v8z"/>
+          <svg class="send-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 13.83" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.16667 3.83333C3.16667 2.82645 3.45873 2.13534 3.90713 1.69498C4.35747 1.25272 5.03 1 5.91453 1C7.0263 1 7.80859 1.39615 8.24137 2.09624C8.38657 2.33113 8.69469 2.40383 8.92957 2.25863C9.16446 2.11343 9.23717 1.80531 9.09197 1.57043C8.42984 0.499319 7.2726 0 5.91453 0C4.84225 0 3.89085 0.309378 3.20645 0.981502C2.52013 1.65552 2.16667 2.63108 2.16667 3.83333V4.02613C0.910693 4.49164 0 5.74886 0 7.23278C0 9.79163 1.97891 11.2677 3.66376 12.5245C3.83888 12.6551 4.01083 12.7834 4.17704 12.9102C4.8 13.3857 5.4 13.8333 6 13.8333C6.6 13.8333 7.2 13.3857 7.82296 12.9102C7.98917 12.7834 8.16112 12.6551 8.33624 12.5245C10.0211 11.2677 12 9.79163 12 7.23278C12 4.40797 8.6999 2.40468 6 5.12041C5.0737 4.18868 4.07675 3.81242 3.16667 3.83423V3.83333ZM6 6.66667C6.27614 6.66667 6.5 6.89052 6.5 7.16667V8.83333C6.5 9.10947 6.27614 9.33333 6 9.33333C5.72386 9.33333 5.5 9.10947 5.5 8.83333V7.16667C5.5 6.89052 5.72386 6.66667 6 6.66667Z" fill="white"/>
           </svg>
         </button>
       </div>
