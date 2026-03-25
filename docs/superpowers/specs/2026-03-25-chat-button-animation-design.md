@@ -43,10 +43,11 @@ Arcs use `stroke` (no fill). Core uses `fill`. All white (`#fff`).
 
 ### Core — Vibrate
 
-- **Keyframes:** `translate` shifts ±1px on X and Y across 5-6 steps to create organic trembling
+- **Keyframes:** `translate` shifts ±1px on X and Y across 6 keyframe stops to create organic trembling
 - **Duration:** `0.4s`
 - **Iteration:** `infinite`
 - **Easing:** `ease-in-out`
+- **Note:** Pixel units are intentional — vibration stays at constant 1px screen displacement regardless of icon scale
 
 ```css
 @keyframes core-vibrate {
@@ -66,10 +67,14 @@ Arcs use `stroke` (no fill). Core uses `fill`. All white (`#fff`).
 - **Iteration:** `infinite`
 - **Easing:** `ease-out`
 - **transform-origin:** `center`
-- **Stagger:**
-  - `.waves-left`: `delay: 0s`
-  - `.waves-right`: `delay: 0.15s`
-  - `.wave-far` (both sides): additional `+0.3s` delay vs their `.wave-near`
+- **Stagger delays (computed):**
+
+| Element | Delay |
+|---------|-------|
+| `.waves-left .wave-near` | `0s` |
+| `.waves-left .wave-far` | `0.3s` |
+| `.waves-right .wave-near` | `0.15s` |
+| `.waves-right .wave-far` | `0.45s` |
 
 ```css
 @keyframes wave-pulse {
@@ -77,6 +82,11 @@ Arcs use `stroke` (no fill). Core uses `fill`. All white (`#fff`).
   30%  { transform: scaleX(1); opacity: 1; }
   100% { transform: scaleX(1.1); opacity: 0; }
 }
+
+.waves-left .wave-near  { animation-delay: 0s; }
+.waves-left .wave-far   { animation-delay: calc(var(--wave-stagger) * 2); }
+.waves-right .wave-near { animation-delay: var(--wave-stagger); }
+.waves-right .wave-far  { animation-delay: calc(var(--wave-stagger) * 3); }
 ```
 
 ## CSS Variables
@@ -85,7 +95,7 @@ Arcs use `stroke` (no fill). Core uses `fill`. All white (`#fff`).
 |----------|---------|-------------|
 | `--vibrate-duration` | `0.4s` | Core vibration speed |
 | `--wave-duration` | `1.8s` | Wave pulse cycle |
-| `--wave-stagger` | `0.15s` | Delay between left/right waves |
+| `--wave-stagger` | `0.15s` | Base stagger unit; delays are multiples of this value |
 
 ## Preview Layout (Skeleton)
 
@@ -103,7 +113,7 @@ The standalone HTML file shows the button in context — a simplified chat inter
 ### `index.html` section (add after agent finishes)
 
 ```
-data-feature="live-now"
+data-feature="Live Now"
 data-name="Chat Button Animation"
 data-duration="0.4s / 1.8s"
 data-easing="ease-in-out / ease-out"
