@@ -250,6 +250,125 @@
       <template class="animation-js"></template>
     </section>
 
+    <section class="animation"
+      data-feature="Дашборд"
+      data-name="Chart Reveal"
+      data-duration="0.6s"
+      data-easing="ease-out"
+      data-delay="staggered 0.1s"
+      data-css-vars="--bar-height-1, --bar-height-2, --bar-height-3, --bar-height-4"
+      data-file="downloads/dashboard/chart-reveal.html">
+
+      <div class="animation-preview">
+        <div class="demo-chart">
+          <div class="demo-bar" style="--bar-height: 60%; --bar-delay: 0s;"></div>
+          <div class="demo-bar" style="--bar-height: 85%; --bar-delay: 0.1s;"></div>
+          <div class="demo-bar" style="--bar-height: 45%; --bar-delay: 0.2s;"></div>
+          <div class="demo-bar" style="--bar-height: 70%; --bar-delay: 0.3s;"></div>
+        </div>
+      </div>
+
+      <template class="animation-css">
+@keyframes barReveal {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--bar-height, 50%);
+    opacity: 1;
+  }
+}
+
+.demo-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  height: 120px;
+  padding: 0 20px;
+}
+
+.demo-bar {
+  width: 32px;
+  background: #a0a0ff;
+  border-radius: 4px 4px 0 0;
+  animation: barReveal 0.6s ease-out var(--bar-delay, 0s) both;
+}
+      </template>
+
+      <template class="animation-html">
+<div class="demo-chart">
+  <div class="demo-bar" style="--bar-height: 60%; --bar-delay: 0s;"></div>
+  <div class="demo-bar" style="--bar-height: 85%; --bar-delay: 0.1s;"></div>
+  <div class="demo-bar" style="--bar-height: 45%; --bar-delay: 0.2s;"></div>
+  <div class="demo-bar" style="--bar-height: 70%; --bar-delay: 0.3s;"></div>
+</div>
+      </template>
+
+      <template class="animation-js"></template>
+    </section>
+
+    <section class="animation"
+      data-feature="Дашборд"
+      data-name="Counter Up"
+      data-duration="1s"
+      data-easing="ease-out"
+      data-delay="0s"
+      data-css-vars=""
+      data-file="downloads/dashboard/counter-up.html">
+
+      <div class="animation-preview">
+        <div class="demo-counter-wrap">
+          <div class="demo-counter-value" data-target="1284">0</div>
+          <div class="demo-counter-label">Active Users</div>
+        </div>
+      </div>
+
+      <template class="animation-css">
+.demo-counter-wrap {
+  text-align: center;
+}
+
+.demo-counter-value {
+  font-size: 48px;
+  font-weight: 700;
+  color: #e0e0ff;
+  font-variant-numeric: tabular-nums;
+}
+
+.demo-counter-label {
+  font-size: 13px;
+  color: #6c6c9c;
+  margin-top: 4px;
+}
+      </template>
+
+      <template class="animation-html">
+<div class="demo-counter-wrap">
+  <div class="demo-counter-value" data-target="1284">0</div>
+  <div class="demo-counter-label">Active Users</div>
+</div>
+      </template>
+
+      <template class="animation-js">
+// Animate number counting up
+const el = document.querySelector('.demo-counter-value');
+const target = parseInt(el.dataset.target, 10);
+const duration = 1000;
+const start = performance.now();
+
+function tick(now) {
+  const elapsed = now - start;
+  const progress = Math.min(elapsed / duration, 1);
+  const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+  el.textContent = Math.round(target * eased);
+  if (progress < 1) requestAnimationFrame(tick);
+}
+
+requestAnimationFrame(tick);
+      </template>
+    </section>
+
   </div>
 
   <script src="catalog.js"></script>
