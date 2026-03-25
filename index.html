@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animation Catalog</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1 class="sidebar-title">Animations</h1>
+    </div>
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <!-- Built dynamically by catalog.js -->
+    </nav>
+  </aside>
+
+  <main class="content" id="content">
+    <div class="card" id="animation-card">
+      <!-- Header -->
+      <div class="card-header" id="card-header">
+        <div class="card-titles">
+          <h2 class="card-name" id="card-name"></h2>
+          <span class="card-feature" id="card-feature"></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn" id="btn-replay">▶ Replay</button>
+          <a class="btn" id="btn-download" download>⬇ Download HTML</a>
+        </div>
+      </div>
+
+      <!-- Preview -->
+      <div class="preview" id="preview"></div>
+
+      <!-- Spec -->
+      <div class="spec" id="spec"></div>
+
+      <!-- Code Blocks -->
+      <div class="code-blocks" id="code-blocks"></div>
+    </div>
+  </main>
+
+  <!-- Animation sections go here -->
+  <div id="animations" style="display:none">
+  </div>
+
+  <script src="catalog.js"></script>
+</body>
+</html>
