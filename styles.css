@@ -209,7 +209,7 @@ body {
   justify-content: center;
   background: none;
   border: none;
-  padding: 4px;
+  padding: 0;
   color: var(--text-muted);
   cursor: pointer;
   transition: color 0.15s ease;
