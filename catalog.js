@@ -119,6 +119,7 @@
 
     // Spec
     renderSpec(el);
+    renderNote(el);
 
     // Code blocks — file-based (fetch snippets) or template-based
     if (file) {
@@ -179,6 +180,44 @@
   });
 
   // --- Spec ---
+
+  // Format spec value: wrap tokens in badge spans, keep separators as plain text
+  function formatSpecValue(raw) {
+    // Tokenize: split on / and , but NOT inside parentheses
+    const tokens = [];
+    let depth = 0, current = '';
+    for (let i = 0; i < raw.length; i++) {
+      const ch = raw[i];
+      if (ch === '(') { depth++; current += ch; }
+      else if (ch === ')') { depth--; current += ch; }
+      else if (depth === 0 && (ch === '/' || ch === ',')) {
+        tokens.push(current);
+        tokens.push(ch); // separator
+        current = '';
+      } else {
+        current += ch;
+      }
+    }
+    if (current) tokens.push(current);
+
+    return tokens.map(part => {
+      const trimmed = part.trim();
+      if (!trimmed || trimmed === '/' || trimmed === ',') {
+        return part; // keep separator as-is
+      }
+      // Check if part has trailing parenthetical like "(stagger)"
+      const match = trimmed.match(/^(.+?)(\s+\(.+\))$/);
+      if (match) {
+        return '<span class="badge">' + escapeHtml(match[1].trim()) + '</span>' + escapeHtml(match[2]);
+      }
+      return '<span class="badge">' + escapeHtml(trimmed) + '</span>';
+    }).join('');
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
   function renderSpec(el) {
     const spec = document.getElementById('spec');
     const items = [];
@@ -188,11 +227,23 @@
     if (el.dataset.delay) items.push({ label: 'Delay', value: el.dataset.delay });
     if (el.dataset.cssVars) items.push({ label: 'CSS Variables', value: el.dataset.cssVars });
 
-    spec.innerHTML = '<div class="spec-title">Spec</div><div class="spec-grid">' +
-      items.map(i =>
-        '<div><div class="spec-item-label">' + i.label + '</div>' +
-        '<div class="spec-item-value">' + i.value + '</div></div>'
-      ).join('') + '</div>';
+    spec.innerHTML = items.map(i =>
+      '<div class="spec-row">' +
+        '<div class="spec-label">' + escapeHtml(i.label) + '</div>' +
+        '<div class="spec-value">' + formatSpecValue(i.value) + '</div>' +
+      '</div>'
+    ).join('');
+  }
+
+  function renderNote(el) {
+    const note = document.getElementById('note');
+    const text = el.dataset.note;
+    if (text) {
+      note.innerHTML = '<strong>Note:</strong> ' + escapeHtml(text);
+      note.style.display = '';
+    } else {
+      note.style.display = 'none';
+    }
   }
 
   // --- Code Blocks from file (snippet markers) ---
