@@ -8,10 +8,6 @@
   <style>
     /* === Tokens === */
     :root {
-      --vibrate-duration: 0.4s;
-      --wave-duration: 1.8s;
-      --wave-stagger: 0.15s;
-
       --bg-app: #1f1825;
       --bg-header: rgba(255,255,255,0.06);
       --bg-bubble-model: rgba(255,255,255,0.06);
@@ -34,26 +30,30 @@
 
     /* @snippet:css */
     @keyframes core-vibrate {
-      0%   { transform: translate(0, 0); }
-      20%  { transform: translate(-1px, 0.5px); }
-      40%  { transform: translate(0.5px, -1px); }
-      60%  { transform: translate(-0.5px, 0.5px); }
-      80%  { transform: translate(1px, -0.5px); }
-      100% { transform: translate(0, 0); }
+      0%, 25%, 100% { transform: translate(0, 0); }
+      2.5%  { transform: translate(-0.7px, 0.4px); }
+      5%    { transform: translate(0.5px, -0.7px); }
+      7.5%  { transform: translate(-0.7px, 0.5px); }
+      10%   { transform: translate(0.5px, -0.5px); }
+      12.5% { transform: translate(-0.5px, 0.7px); }
+      15%   { transform: translate(0.7px, -0.4px); }
+      17.5% { transform: translate(-0.4px, 0.5px); }
+      20%   { transform: translate(0.4px, -0.4px); }
+      22.5% { transform: translate(-0.2px, 0.2px); }
     }
 
-    @keyframes wave-pulse {
-      0%   { transform: scaleX(0.7); opacity: 0; }
-      30%  { transform: scaleX(1); opacity: 1; }
-      100% { transform: scaleX(1.1); opacity: 0; }
+    @keyframes wave-expand {
+      0%   { transform: rotate(45deg) scaleX(0.7); opacity: 0; }
+      12%  { transform: rotate(45deg) scaleX(0.9); opacity: 0.7; }
+      40%  { transform: rotate(45deg) scaleX(1.15); opacity: 0; }
+      100% { transform: rotate(45deg) scaleX(1.15); opacity: 0; }
     }
 
     /* === Icon Animation === */
     .icon-svg { display: block; }
 
     .icon-svg .core {
-      fill: #fff;
-      animation: core-vibrate var(--vibrate-duration) ease-in-out infinite;
+      animation: core-vibrate 2s ease-in-out infinite;
     }
 
     .icon-svg .wave-near,
@@ -62,14 +62,15 @@
       stroke: #fff;
       stroke-width: 1.2;
       stroke-linecap: round;
+      transform-box: view-box;
       transform-origin: center;
-      animation: wave-pulse var(--wave-duration) ease-out infinite;
+      animation: wave-expand 2s ease-out infinite;
     }
 
     .icon-svg .waves-left .wave-near  { animation-delay: 0s; }
-    .icon-svg .waves-left .wave-far   { animation-delay: calc(var(--wave-stagger) * 2); }
-    .icon-svg .waves-right .wave-near { animation-delay: var(--wave-stagger); }
-    .icon-svg .waves-right .wave-far  { animation-delay: calc(var(--wave-stagger) * 3); }
+    .icon-svg .waves-left .wave-far   { animation-delay: 0.2s; }
+    .icon-svg .waves-right .wave-near { animation-delay: 0.1s; }
+    .icon-svg .waves-right .wave-far  { animation-delay: 0.25s; }
     /* @snippet:end */
 
     /* === Layout === */
@@ -103,11 +104,24 @@
     }
 
     .go-live-btn {
+      position: relative;
       width: 44px;
       height: 44px;
       border-radius: 16px;
-      background: linear-gradient(-34deg, var(--gradient-golive-from) 9%, var(--gradient-golive-to) 77%);
       border: none;
+      overflow: hidden;
+      background:
+        linear-gradient(
+          -33.9deg,
+          rgba(241, 98, 152, 0.2) 9.26%,
+          rgba(122, 39, 236, 0.2) 77.48%
+        ),
+        #1a1225;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow:
+        0 0 21px 0 rgba(0, 0, 0, 0.09),
+        0 0 128px 0 rgba(0, 0, 0, 0.18);
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -115,15 +129,70 @@
       justify-content: center;
       gap: 1px;
       flex-shrink: 0;
-      box-shadow: 0 0 128px rgba(0,0,0,0.18), 0 0 21px rgba(0,0,0,0.09);
+    }
+
+    /* Gradient blob (pink→purple) — Ellipse 978 */
+    .go-live-btn .blob-purple {
+      position: absolute;
+      width: 60px;
+      height: 29px;
+      left: -12px;
+      top: 17px;
+      border-radius: 50%;
+      background: linear-gradient(320deg, #F16298 0%, #7A27EC 78%);
+      opacity: 0.85;
+      filter: blur(6.7px);
+      pointer-events: none;
+    }
+
+    /* White glow blob — Ellipse 979 */
+    .go-live-btn .blob-pink {
+      position: absolute;
+      width: 38px;
+      height: 16px;
+      left: -6px;
+      top: 35px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.7);
+      filter: blur(6px);
+      pointer-events: none;
+    }
+
+    /* Gradient glare border */
+    .go-live-btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      padding: 1px;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0.08) 40%,
+        rgba(255, 255, 255, 0.03) 100%
+      );
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 1;
     }
 
     .go-live-btn .icon-svg {
       width: 16px;
       height: 16px;
+      position: relative;
+      z-index: 2;
     }
 
     .go-live-label {
+      position: relative;
+      z-index: 2;
       font-family: var(--font);
       font-size: 8px;
       font-weight: 500;
@@ -267,13 +336,16 @@
     <div class="chat-panel">
       <!-- @snippet:html -->
       <button class="go-live-btn" aria-label="Go Live">
+        <span class="blob-purple"></span>
+        <span class="blob-pink"></span>
         <svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none">
           <g class="waves-left">
             <path class="wave-near" d="M5.5 5.5 Q4 8 5.5 10.5" />
             <path class="wave-far"  d="M4 4 Q1.5 8 4 12" />
           </g>
           <g class="core">
-            <ellipse cx="8" cy="8" rx="1.8" ry="2.2" />
+            <path d="M5.40065 12.2984C5.52373 12.1754 5.63474 12.1261 5.77375 12.0894C6.11312 12.0181 6.44353 11.8452 6.71557 11.5733C7.05955 11.2293 7.24472 10.792 7.2675 10.3609C7.30247 10.1418 7.42629 9.90194 7.62877 9.69934C7.8132 9.51515 8.02875 9.39581 8.2311 9.34951C8.51347 9.29949 8.78564 9.16434 9.00628 8.94319C9.2853 8.6643 9.42854 8.30229 9.43439 7.94276C9.45753 7.69598 9.59268 7.41721 9.8249 7.18474C10.0202 6.98936 10.2482 6.86304 10.4622 6.81364C10.4965 6.80903 10.531 6.80306 10.5654 6.79547C10.5674 6.79522 10.5689 6.7946 10.5707 6.7946C10.7856 6.74532 10.991 6.63605 11.1599 6.46693C11.4207 6.20633 11.5392 5.85925 11.5143 5.52523C11.5087 5.36009 11.5932 5.16122 11.7557 4.99869C11.8906 4.86366 12.0507 4.78252 12.1961 4.76187C12.4728 4.74332 12.7598 4.61664 12.989 4.38753C13.4379 3.93852 13.5799 3.17992 13.2001 2.79998C12.82 2.42004 12.0621 2.56237 11.6131 3.01151C11.3878 3.23676 11.2617 3.51801 11.2396 3.79055C11.2222 3.93889 11.1401 4.10503 11.0008 4.24391C10.8324 4.41242 10.6245 4.49804 10.4562 4.48509C10.1283 4.46618 9.78993 4.58515 9.53444 4.84077C9.36532 5.00977 9.25643 5.21573 9.20714 5.43052L9.2054 5.42916C9.20416 5.44085 9.20154 5.4528 9.1998 5.46487C9.19594 5.48553 9.19221 5.50631 9.1891 5.52672C9.14181 5.74426 9.01425 5.9766 8.81538 6.17535C8.57943 6.4113 8.29606 6.54732 8.04679 6.56736C7.69112 6.57632 7.33445 6.71943 7.0583 6.99546C6.84263 7.2115 6.70835 7.47695 6.65571 7.75235C6.61265 7.96005 6.49107 8.18232 6.30153 8.37198C6.09781 8.5762 5.85588 8.70077 5.63549 8.73437L5.63623 8.73524C5.20701 8.75876 4.77194 8.94456 4.42934 9.28704C4.16202 9.55436 3.99078 9.87842 3.91699 10.2117C3.88861 10.3307 3.79304 10.4865 3.70007 10.5977L5.40065 12.2984Z" fill="white"/>
+            <path d="M3.43692 10.8606L5.13863 12.5629L4.10173 13.6001L2.40002 11.8979L3.43692 10.8606Z" fill="white"/>
           </g>
           <g class="waves-right">
             <path class="wave-near" d="M10.5 5.5 Q12 8 10.5 10.5" />
