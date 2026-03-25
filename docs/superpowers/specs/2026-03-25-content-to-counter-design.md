@@ -54,7 +54,7 @@ Chat stands still. Pause so the viewer sees the starting state.
 ### Phase 3: Pause on bottom sheet (1100ms → 2200ms)
 Sheet stays visible for 1100ms so the viewer can see the content.
 
-### Phase 4: Collapse + content flight (2200ms → 2700ms)
+### Phase 4: Collapse + content flight (2200ms → 2500ms)
 Simultaneously:
 - Bottom sheet slide down: `translateY(0)→translateY(100%)`, 250ms, ease-in
 - Overlay fade out: `opacity 0.7→0`, 250ms
@@ -139,7 +139,7 @@ setTimeout → add class "phase-badge-pop"
 
 ## Catalog Integration
 
-Single `<section>` in `index.html` with:
+Single `<section class="animation">` inside `#animations` in `index.html` with:
 - `data-feature="Live Now"`
 - `data-name="Content to Counter"`
 - `data-duration="2.8s"`
