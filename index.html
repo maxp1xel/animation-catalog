@@ -43,6 +43,213 @@
 
   <!-- Animation sections go here -->
   <div id="animations" style="display:none">
+
+    <section class="animation"
+      data-feature="Онбординг"
+      data-name="Card Entrance"
+      data-duration="0.4s"
+      data-easing="ease-out"
+      data-delay="0s"
+      data-css-vars="--card-duration, --card-ease"
+      data-file="downloads/onboarding/card-entrance.html">
+
+      <div class="animation-preview">
+        <div class="demo-card">
+          <div class="demo-card-icon">👋</div>
+          <div class="demo-card-title">Welcome</div>
+          <div class="demo-card-text">Get started with your account</div>
+        </div>
+      </div>
+
+      <template class="animation-css">
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.demo-card {
+  background: #2a2a5a;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  width: 200px;
+  animation: cardEntrance var(--card-duration, 0.4s) var(--card-ease, ease-out) both;
+}
+
+.demo-card-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.demo-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #e0e0ff;
+  margin-bottom: 4px;
+}
+
+.demo-card-text {
+  font-size: 12px;
+  color: #8888aa;
+}
+      </template>
+
+      <template class="animation-html">
+<div class="demo-card">
+  <div class="demo-card-icon">👋</div>
+  <div class="demo-card-title">Welcome</div>
+  <div class="demo-card-text">Get started with your account</div>
+</div>
+      </template>
+
+      <template class="animation-js"></template>
+    </section>
+
+    <section class="animation"
+      data-feature="Онбординг"
+      data-name="Progress Bar"
+      data-duration="1.2s"
+      data-easing="ease-in-out"
+      data-delay="0.2s"
+      data-css-vars="--progress-width, --progress-duration"
+      data-file="downloads/onboarding/progress-bar.html">
+
+      <div class="animation-preview">
+        <div class="demo-progress-wrap">
+          <div class="demo-progress-label">Step 2 of 4</div>
+          <div class="demo-progress-track">
+            <div class="demo-progress-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <template class="animation-css">
+@keyframes progressFill {
+  from { width: 0; }
+  to { width: var(--progress-width, 50%); }
+}
+
+.demo-progress-wrap {
+  width: 280px;
+}
+
+.demo-progress-label {
+  font-size: 13px;
+  color: #8888aa;
+  margin-bottom: 8px;
+}
+
+.demo-progress-track {
+  height: 6px;
+  background: #2a2a4a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.demo-progress-fill {
+  height: 100%;
+  background: #a0a0ff;
+  border-radius: 3px;
+  animation: progressFill var(--progress-duration, 1.2s) ease-in-out 0.2s both;
+}
+      </template>
+
+      <template class="animation-html">
+<div class="demo-progress-wrap">
+  <div class="demo-progress-label">Step 2 of 4</div>
+  <div class="demo-progress-track">
+    <div class="demo-progress-fill"></div>
+  </div>
+</div>
+      </template>
+
+      <template class="animation-js"></template>
+    </section>
+
+    <section class="animation"
+      data-feature="Онбординг"
+      data-name="Step Indicator"
+      data-duration="0.3s"
+      data-easing="ease"
+      data-delay="0s"
+      data-css-vars="--step-scale"
+      data-file="downloads/onboarding/step-indicator.html">
+
+      <div class="animation-preview">
+        <div class="demo-steps">
+          <div class="demo-step completed">1</div>
+          <div class="demo-step-line"></div>
+          <div class="demo-step active">2</div>
+          <div class="demo-step-line"></div>
+          <div class="demo-step">3</div>
+        </div>
+      </div>
+
+      <template class="animation-css">
+@keyframes stepPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(var(--step-scale, 1.2)); }
+  100% { transform: scale(1); }
+}
+
+.demo-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.demo-step {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  background: #2a2a4a;
+  color: #6c6c9c;
+  transition: all 0.3s ease;
+}
+
+.demo-step.completed {
+  background: #a0a0ff;
+  color: #0d0d1a;
+}
+
+.demo-step.active {
+  background: #a0a0ff;
+  color: #0d0d1a;
+  animation: stepPulse 0.3s ease;
+  box-shadow: 0 0 12px rgba(160, 160, 255, 0.4);
+}
+
+.demo-step-line {
+  width: 40px;
+  height: 2px;
+  background: #2a2a4a;
+}
+      </template>
+
+      <template class="animation-html">
+<div class="demo-steps">
+  <div class="demo-step completed">1</div>
+  <div class="demo-step-line"></div>
+  <div class="demo-step active">2</div>
+  <div class="demo-step-line"></div>
+  <div class="demo-step">3</div>
+</div>
+      </template>
+
+      <template class="animation-js"></template>
+    </section>
+
   </div>
 
   <script src="catalog.js"></script>

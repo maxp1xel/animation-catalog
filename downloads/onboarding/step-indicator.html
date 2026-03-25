@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Step Indicator — Онбординг</title>
+<style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0d0d1a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+@keyframes stepPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(var(--step-scale, 1.2)); }
+  100% { transform: scale(1); }
+}
+
+.demo-steps { display: flex; align-items: center; gap: 0; }
+.demo-step {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 600;
+  background: #2a2a4a; color: #6c6c9c;
+  transition: all 0.3s ease;
+}
+.demo-step.completed { background: #a0a0ff; color: #0d0d1a; }
+.demo-step.active {
+  background: #a0a0ff; color: #0d0d1a;
+  animation: stepPulse 0.3s ease;
+  box-shadow: 0 0 12px rgba(160, 160, 255, 0.4);
+}
+.demo-step-line { width: 40px; height: 2px; background: #2a2a4a; }
+</style>
+</head>
+<body>
+<div class="demo-steps">
+  <div class="demo-step completed">1</div>
+  <div class="demo-step-line"></div>
+  <div class="demo-step active">2</div>
+  <div class="demo-step-line"></div>
+  <div class="demo-step">3</div>
+</div>
+</body>
+</html>
