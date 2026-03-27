@@ -1,6 +1,23 @@
 (function () {
   'use strict';
 
+  const SPEC_FIELDS = [
+    { key: 'duration', label: 'Duration' },
+    { key: 'easing',   label: 'Easing' },
+    { key: 'delay',    label: 'Delay' },
+    { key: 'cssVars',  label: 'CSS Variables' },
+  ];
+
+  const CODE_BLOCK_TYPES = [
+    { type: 'css',  label: 'CSS',        selector: '.animation-css' },
+    { type: 'html', label: 'HTML',       selector: '.animation-html' },
+    { type: 'js',   label: 'JavaScript', selector: '.animation-js' },
+  ];
+
+  const SNIPPET_LABELS = Object.fromEntries(
+    CODE_BLOCK_TYPES.map(b => [b.type, b.label])
+  );
+
   const state = {
     animations: [],   // { el, feature, name, slug }
     features: [],     // { name, animations[] }
@@ -228,20 +245,15 @@
   }
 
   function renderSpec(el) {
-    const spec = dom.spec;
-    const items = [];
-
-    if (el.dataset.duration) items.push({ label: 'Duration', value: el.dataset.duration });
-    if (el.dataset.easing) items.push({ label: 'Easing', value: el.dataset.easing });
-    if (el.dataset.delay) items.push({ label: 'Delay', value: el.dataset.delay });
-    if (el.dataset.cssVars) items.push({ label: 'CSS Variables', value: el.dataset.cssVars });
-
-    spec.innerHTML = items.map(i =>
-      '<div class="spec-row">' +
-        '<div class="spec-label">' + escapeHtml(i.label) + '</div>' +
-        '<div class="spec-value">' + formatSpecValue(i.value) + '</div>' +
-      '</div>'
-    ).join('');
+    const rows = SPEC_FIELDS
+      .filter(f => el.dataset[f.key])
+      .map(f =>
+        '<div class="spec-row">' +
+          '<div class="spec-label">' + escapeHtml(f.label) + '</div>' +
+          '<div class="spec-value">' + formatSpecValue(el.dataset[f.key]) + '</div>' +
+        '</div>'
+      );
+    dom.spec.innerHTML = rows.join('');
   }
 
   function renderNote(el) {
@@ -257,20 +269,14 @@
 
   // --- Code Blocks from file (snippet markers) ---
   function renderCodeBlocksFromFile(file) {
-    const container = dom.codeBlocks;
-    container.innerHTML = '';
-
+    dom.codeBlocks.innerHTML = '';
     fetch(file)
       .then(r => r.text())
       .then(text => {
         const snippets = extractSnippets(text);
-        const labels = { css: 'CSS', html: 'HTML', js: 'JavaScript' };
-
-        Object.keys(snippets).forEach(type => {
-          const code = snippets[type];
-          if (!code) return;
-          appendCodeBlock(container, labels[type] || type, code);
-        });
+        for (const [type, code] of Object.entries(snippets)) {
+          if (code) appendCodeBlock(dom.codeBlocks, SNIPPET_LABELS[type] || type, code);
+        }
       });
   }
 
@@ -289,25 +295,14 @@
 
   // --- Code Blocks from templates ---
   function renderCodeBlocks(el) {
-    const container = dom.codeBlocks;
-    container.innerHTML = '';
-
-    const blocks = [
-      { label: 'CSS', selector: '.animation-css' },
-      { label: 'HTML', selector: '.animation-html' },
-      { label: 'JavaScript', selector: '.animation-js' },
-    ];
-
-    blocks.forEach(({ label, selector }) => {
+    dom.codeBlocks.innerHTML = '';
+    CODE_BLOCK_TYPES.forEach(({ label, selector }) => {
       const template = el.querySelector(selector);
       if (!template) return;
-
       const code = selector === '.animation-html'
         ? template.innerHTML.trim()
         : template.content.textContent.trim();
-
-      if (!code) return;
-      appendCodeBlock(container, label, code);
+      if (code) appendCodeBlock(dom.codeBlocks, label, code);
     });
   }
 
