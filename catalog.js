@@ -203,31 +203,33 @@
 
   // --- Spec ---
 
-  // Format spec value: wrap tokens in badge spans, keep separators as plain text
-  function formatSpecValue(raw) {
-    // Tokenize: split on / and , but NOT inside parentheses
+  // Split spec string on / and , delimiters, preserving delimiters and respecting parentheses
+  function tokenizeSpecValue(raw) {
     const tokens = [];
-    let depth = 0, current = '';
-    for (let i = 0; i < raw.length; i++) {
-      const ch = raw[i];
+    let depth = 0;
+    let current = '';
+
+    for (const ch of raw) {
       if (ch === '(') { depth++; current += ch; }
       else if (ch === ')') { depth--; current += ch; }
       else if (depth === 0 && (ch === '/' || ch === ',')) {
         tokens.push(current);
-        tokens.push(ch); // separator
+        tokens.push(ch);
         current = '';
       } else {
         current += ch;
       }
     }
     if (current) tokens.push(current);
+    return tokens;
+  }
 
-    return tokens.map(part => {
-      const trimmed = part.trim();
-      if (!trimmed || trimmed === '/' || trimmed === ',') {
-        return part; // keep separator as-is
-      }
-      // Check if part has trailing parenthetical like "(stagger)"
+  function formatSpecValue(raw) {
+    return tokenizeSpecValue(raw).map(token => {
+      const trimmed = token.trim();
+      if (!trimmed || trimmed === '/' || trimmed === ',') return token;
+
+      // Separate trailing parenthetical like "0.15s (stagger)"
       const match = trimmed.match(/^(.+?)(\s+\(.+\))$/);
       if (match) {
         return '<span class="badge">' + escapeHtml(match[1].trim()) + '</span>' + escapeHtml(match[2]);
