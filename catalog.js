@@ -155,11 +155,7 @@
     renderNote(el);
 
     // Code blocks — file-based (fetch snippets) or template-based
-    if (file) {
-      renderCodeBlocksFromFile(file);
-    } else {
-      renderCodeBlocks(el);
-    }
+    renderCodeSection(file, el);
   }
 
   // --- Preview ---
@@ -267,17 +263,28 @@
     }
   }
 
-  // --- Code Blocks from file (snippet markers) ---
-  function renderCodeBlocksFromFile(file) {
+  // --- Code Blocks ---
+  function renderCodeSection(file, el) {
     dom.codeBlocks.innerHTML = '';
-    fetch(file)
-      .then(r => r.text())
-      .then(text => {
-        const snippets = extractSnippets(text);
-        for (const [type, code] of Object.entries(snippets)) {
-          if (code) appendCodeBlock(dom.codeBlocks, SNIPPET_LABELS[type] || type, code);
-        }
+    if (file) {
+      fetch(file)
+        .then(r => r.text())
+        .then(text => {
+          const snippets = extractSnippets(text);
+          for (const [type, code] of Object.entries(snippets)) {
+            if (code) appendCodeBlock(dom.codeBlocks, SNIPPET_LABELS[type] || type, code);
+          }
+        });
+    } else {
+      CODE_BLOCK_TYPES.forEach(({ label, selector }) => {
+        const template = el.querySelector(selector);
+        if (!template) return;
+        const code = selector === '.animation-html'
+          ? template.innerHTML.trim()
+          : template.content.textContent.trim();
+        if (code) appendCodeBlock(dom.codeBlocks, label, code);
       });
+    }
   }
 
   // Extract content between @snippet markers
@@ -291,19 +298,6 @@
       snippets[match[1]] = match[2].trim();
     }
     return snippets;
-  }
-
-  // --- Code Blocks from templates ---
-  function renderCodeBlocks(el) {
-    dom.codeBlocks.innerHTML = '';
-    CODE_BLOCK_TYPES.forEach(({ label, selector }) => {
-      const template = el.querySelector(selector);
-      if (!template) return;
-      const code = selector === '.animation-html'
-        ? template.innerHTML.trim()
-        : template.content.textContent.trim();
-      if (code) appendCodeBlock(dom.codeBlocks, label, code);
-    });
   }
 
   // --- Shared: append a code block with Copy ---
