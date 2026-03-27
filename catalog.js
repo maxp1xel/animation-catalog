@@ -7,8 +7,24 @@
     active: null,     // current animation object
   };
 
+  const dom = {};
+
   // --- Init ---
   function init() {
+    dom.sidebarNav  = document.getElementById('sidebar-nav');
+    dom.cardName    = document.getElementById('card-name');
+    dom.cardFeature = document.getElementById('card-feature');
+    dom.btnDownload = document.getElementById('btn-download');
+    dom.btnReplay   = document.getElementById('btn-replay');
+    dom.preview     = document.getElementById('preview');
+    dom.spec        = document.getElementById('spec');
+    dom.note        = document.getElementById('note');
+    dom.codeBlocks  = document.getElementById('code-blocks');
+
+    dom.btnReplay.addEventListener('click', () => {
+      if (state.active) renderPreview(state.active);
+    });
+
     parseAnimations();
     buildSidebar();
     navigateFromHash() || selectFirst();
@@ -39,7 +55,7 @@
 
   // --- Build sidebar DOM ---
   function buildSidebar() {
-    const nav = document.getElementById('sidebar-nav');
+    const nav = dom.sidebarNav;
     nav.innerHTML = '';
 
     state.features.forEach(feature => {
@@ -101,11 +117,11 @@
     const el = anim.el;
 
     // Header
-    document.getElementById('card-name').textContent = anim.name;
-    document.getElementById('card-feature').textContent = anim.feature;
+    dom.cardName.textContent = anim.name;
+    dom.cardFeature.textContent = anim.feature;
 
     // Download
-    const downloadBtn = document.getElementById('btn-download');
+    const downloadBtn = dom.btnDownload;
     const file = el.dataset.file;
     if (file) {
       downloadBtn.href = file;
@@ -131,7 +147,7 @@
 
   // --- Preview ---
   function renderPreview(anim) {
-    const preview = document.getElementById('preview');
+    const preview = dom.preview;
     const el = anim.el;
     const file = el.dataset.file;
 
@@ -171,13 +187,6 @@
       preview.appendChild(script);
     }
   }
-
-  // --- Replay ---
-  document.getElementById('btn-replay').addEventListener('click', () => {
-    if (state.active) {
-      renderPreview(state.active);
-    }
-  });
 
   // --- Spec ---
 
@@ -219,7 +228,7 @@
   }
 
   function renderSpec(el) {
-    const spec = document.getElementById('spec');
+    const spec = dom.spec;
     const items = [];
 
     if (el.dataset.duration) items.push({ label: 'Duration', value: el.dataset.duration });
@@ -236,7 +245,7 @@
   }
 
   function renderNote(el) {
-    const note = document.getElementById('note');
+    const note = dom.note;
     const text = el.dataset.note;
     if (text) {
       note.innerHTML = '<strong>Note:</strong> ' + escapeHtml(text);
@@ -248,7 +257,7 @@
 
   // --- Code Blocks from file (snippet markers) ---
   function renderCodeBlocksFromFile(file) {
-    const container = document.getElementById('code-blocks');
+    const container = dom.codeBlocks;
     container.innerHTML = '';
 
     fetch(file)
@@ -280,7 +289,7 @@
 
   // --- Code Blocks from templates ---
   function renderCodeBlocks(el) {
-    const container = document.getElementById('code-blocks');
+    const container = dom.codeBlocks;
     container.innerHTML = '';
 
     const blocks = [
