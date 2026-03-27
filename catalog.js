@@ -1,6 +1,7 @@
 (function () {
   'use strict';
 
+  // ── Constants ──────────────────────────────────────────────
   const SPEC_FIELDS = [
     { key: 'duration', label: 'Duration' },
     { key: 'easing',   label: 'Easing' },
@@ -18,6 +19,7 @@
     CODE_BLOCK_TYPES.map(b => [b.type, b.label])
   );
 
+  // ── State ──────────────────────────────────────────────────
   const state = {
     animations: [],   // { el, feature, name, slug }
     features: [],     // { name, animations[] }
@@ -26,7 +28,7 @@
 
   const dom = {};
 
-  // --- Init ---
+  // ── Init ───────────────────────────────────────────────────
   function init() {
     dom.sidebarNav  = document.getElementById('sidebar-nav');
     dom.cardName    = document.getElementById('card-name');
@@ -48,7 +50,7 @@
     window.addEventListener('hashchange', () => navigateFromHash());
   }
 
-  // --- Parse <section class="animation"> elements ---
+  // ── Parsing ────────────────────────────────────────────────
   function parseAnimations() {
     const sections = document.querySelectorAll('#animations .animation');
     const featureMap = new Map();
@@ -70,7 +72,7 @@
     state.features = Array.from(featureMap.values());
   }
 
-  // --- Build sidebar DOM ---
+  // ── Sidebar ────────────────────────────────────────────────
   function buildSidebar() {
     const nav = dom.sidebarNav;
     nav.innerHTML = '';
@@ -109,7 +111,7 @@
     });
   }
 
-  // --- Select animation ---
+  // ── Selection ──────────────────────────────────────────────
   function select(anim) {
     if (state.active) {
       state.active.linkEl.classList.remove('active');
@@ -129,7 +131,13 @@
     renderCard(anim);
   }
 
-  // --- Render animation card ---
+  function selectFirst() {
+    if (state.animations.length > 0) {
+      select(state.animations[0]);
+    }
+  }
+
+  // ── Rendering ──────────────────────────────────────────────
   function renderCard(anim) {
     const el = anim.el;
 
@@ -158,7 +166,6 @@
     renderCodeSection(file, el);
   }
 
-  // --- Preview ---
   function renderPreview(anim) {
     const preview = dom.preview;
     const el = anim.el;
@@ -201,8 +208,79 @@
     }
   }
 
-  // --- Spec ---
+  function renderSpec(el) {
+    const rows = SPEC_FIELDS
+      .filter(f => el.dataset[f.key])
+      .map(f =>
+        '<div class="spec-row">' +
+          '<div class="spec-label">' + escapeHtml(f.label) + '</div>' +
+          '<div class="spec-value">' + formatSpecValue(el.dataset[f.key]) + '</div>' +
+        '</div>'
+      );
+    dom.spec.innerHTML = rows.join('');
+  }
 
+  function renderNote(el) {
+    const note = dom.note;
+    const text = el.dataset.note;
+    if (text) {
+      note.innerHTML = '<strong>Note:</strong> ' + escapeHtml(text);
+      note.style.display = '';
+    } else {
+      note.style.display = 'none';
+    }
+  }
+
+  function renderCodeSection(file, el) {
+    dom.codeBlocks.innerHTML = '';
+    if (file) {
+      fetch(file)
+        .then(r => r.text())
+        .then(text => {
+          const snippets = extractSnippets(text);
+          for (const [type, code] of Object.entries(snippets)) {
+            if (code) appendCodeBlock(dom.codeBlocks, SNIPPET_LABELS[type] || type, code);
+          }
+        });
+    } else {
+      CODE_BLOCK_TYPES.forEach(({ label, selector }) => {
+        const template = el.querySelector(selector);
+        if (!template) return;
+        const code = selector === '.animation-html'
+          ? template.innerHTML.trim()
+          : template.content.textContent.trim();
+        if (code) appendCodeBlock(dom.codeBlocks, label, code);
+      });
+    }
+  }
+
+  function appendCodeBlock(container, label, code) {
+    const block = document.createElement('div');
+    block.className = 'code-block';
+    block.innerHTML =
+      '<div class="code-block-header">' +
+        '<span class="code-block-lang">' + label + '</span>' +
+        '<button class="btn-copy">Copy</button>' +
+      '</div>' +
+      '<pre><code></code></pre>';
+
+    block.querySelector('code').textContent = code;
+
+    block.querySelector('.btn-copy').addEventListener('click', function () {
+      navigator.clipboard.writeText(code).then(() => {
+        this.textContent = 'Copied!';
+        this.classList.add('copied');
+        setTimeout(() => {
+          this.textContent = 'Copy';
+          this.classList.remove('copied');
+        }, 1500);
+      });
+    });
+
+    container.appendChild(block);
+  }
+
+  // ── Spec Formatting ────────────────────────────────────────
   // Split spec string on / and , delimiters, preserving delimiters and respecting parentheses
   function tokenizeSpecValue(raw) {
     const tokens = [];
@@ -238,57 +316,7 @@
     }).join('');
   }
 
-  function escapeHtml(str) {
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  function renderSpec(el) {
-    const rows = SPEC_FIELDS
-      .filter(f => el.dataset[f.key])
-      .map(f =>
-        '<div class="spec-row">' +
-          '<div class="spec-label">' + escapeHtml(f.label) + '</div>' +
-          '<div class="spec-value">' + formatSpecValue(el.dataset[f.key]) + '</div>' +
-        '</div>'
-      );
-    dom.spec.innerHTML = rows.join('');
-  }
-
-  function renderNote(el) {
-    const note = dom.note;
-    const text = el.dataset.note;
-    if (text) {
-      note.innerHTML = '<strong>Note:</strong> ' + escapeHtml(text);
-      note.style.display = '';
-    } else {
-      note.style.display = 'none';
-    }
-  }
-
-  // --- Code Blocks ---
-  function renderCodeSection(file, el) {
-    dom.codeBlocks.innerHTML = '';
-    if (file) {
-      fetch(file)
-        .then(r => r.text())
-        .then(text => {
-          const snippets = extractSnippets(text);
-          for (const [type, code] of Object.entries(snippets)) {
-            if (code) appendCodeBlock(dom.codeBlocks, SNIPPET_LABELS[type] || type, code);
-          }
-        });
-    } else {
-      CODE_BLOCK_TYPES.forEach(({ label, selector }) => {
-        const template = el.querySelector(selector);
-        if (!template) return;
-        const code = selector === '.animation-html'
-          ? template.innerHTML.trim()
-          : template.content.textContent.trim();
-        if (code) appendCodeBlock(dom.codeBlocks, label, code);
-      });
-    }
-  }
-
+  // ── Snippet Extraction ─────────────────────────────────────
   // Extract content between @snippet markers
   // Supports: /* @snippet:css */ ... /* @snippet:end */
   //           <!-- @snippet:html --> ... <!-- @snippet:end -->
@@ -302,34 +330,7 @@
     return snippets;
   }
 
-  // --- Shared: append a code block with Copy ---
-  function appendCodeBlock(container, label, code) {
-    const block = document.createElement('div');
-    block.className = 'code-block';
-    block.innerHTML =
-      '<div class="code-block-header">' +
-        '<span class="code-block-lang">' + label + '</span>' +
-        '<button class="btn-copy">Copy</button>' +
-      '</div>' +
-      '<pre><code></code></pre>';
-
-    block.querySelector('code').textContent = code;
-
-    block.querySelector('.btn-copy').addEventListener('click', function () {
-      navigator.clipboard.writeText(code).then(() => {
-        this.textContent = 'Copied!';
-        this.classList.add('copied');
-        setTimeout(() => {
-          this.textContent = 'Copy';
-          this.classList.remove('copied');
-        }, 1500);
-      });
-    });
-
-    container.appendChild(block);
-  }
-
-  // --- Hash routing ---
+  // ── Routing ────────────────────────────────────────────────
   function navigateFromHash() {
     const hash = location.hash.slice(1);
     if (!hash) return false;
@@ -342,18 +343,16 @@
     return false;
   }
 
-  function selectFirst() {
-    if (state.animations.length > 0) {
-      select(state.animations[0]);
-    }
+  // ── Utilities ──────────────────────────────────────────────
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  // --- Utility ---
   function slugify(str) {
     return str.toLowerCase().replace(/[^a-zа-яё0-9]+/gi, '-').replace(/(^-|-$)/g, '');
   }
 
-  // --- Start ---
+  // ── Start ──────────────────────────────────────────────────
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
