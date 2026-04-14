@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Style Select Screen — SwipeyTin</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+  <style>
+    /* === Tokens === */
+    :root {
+      --st-bg: #1a1521;
+      --st-accent: #8b4af2;
+      --st-text: #e9f2ff;
+      --st-text-secondary: #d9d1dc;
+      --st-text-tertiary: #9b9caa;
+      --st-green: #4ade80;
+      --st-glass: rgba(255,255,255,0.06);
+      --st-glass-border: rgba(255,255,255,0.12);
+      --st-font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* === Reset === */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* @snippet:css */
+    /* ---- Blinking live dot ---- */
+    @keyframes fade-dot {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.2; }
+    }
+
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      justify-content: center;
+    }
+
+    .live-dot-wrapper {
+      position: relative;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .live-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--st-green);
+      animation: fade-dot 3s ease-in-out infinite;
+    }
+
+    /* ---- Bouncing tap-to-select label ---- */
+    @keyframes bounce-label {
+      0%        { transform: translateY(0); }
+      15%       { transform: translateY(-7px); }
+      30%       { transform: translateY(0); }
+      42%       { transform: translateY(-4px); }
+      54%       { transform: translateY(0); }
+      63%       { transform: translateY(-1.5px); }
+      72%, 100% { transform: translateY(0); }
+    }
+
+    .tap-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border: 1px solid var(--st-glass-border);
+      border-radius: 16px;
+      animation: bounce-label 2.2s ease-out infinite;
+    }
+
+    .tap-label-icon {
+      width: 12px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    .tap-label-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .tap-label-text {
+      font-family: var(--st-font);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--st-text-secondary);
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+    /* @snippet:end */
+
+    /* === Phone Frame === */
+    body {
+      background: #0d0d1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: var(--st-font);
+    }
+
+    .phone {
+      width: 375px;
+      height: 812px;
+      border-radius: 32px;
+      background: var(--st-bg);
+      border: 2px solid #333;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow:
+        0 0 40px rgba(0,0,0,0.6),
+        inset 0 0 0 1px rgba(255,255,255,0.05);
+    }
+
+    /* === Background glow === */
+    .bg-glow {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-glow::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(139,74,242,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    /* === Top Nav === */
+    .topnav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo {
+      font-family: var(--st-font);
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 2px;
+    }
+
+    /* === Middle content === */
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* === Title === */
+    .title-section {
+      text-align: center;
+      padding: 0 16px;
+    }
+
+    .title {
+      font-family: var(--st-font);
+      font-size: 28px;
+      font-weight: 600;
+      color: white;
+      line-height: 1.3;
+      letter-spacing: -0.56px;
+    }
+
+    .title .accent {
+      color: var(--st-accent);
+    }
+
+    /* === Cards === */
+    .cards-section {
+      height: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 0 16px;
+    }
+
+    .cards-row {
+      display: flex;
+      gap: 12px;
+      flex: 1;
+      align-items: flex-end;
+      min-height: 0;
+    }
+
+    .style-card {
+      flex: 1;
+      height: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--st-glass-border);
+      background: var(--st-glass);
+      padding: 4px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .style-card-inner {
+      flex: 1;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .style-card-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .style-card-overlay {
+      position: relative;
+      z-index: 1;
+      height: 96px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 8px;
+      border-radius: 0 0 12px 12px;
+    }
+
+    .style-card-name {
+      font-family: var(--st-font);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--st-text);
+      letter-spacing: -0.4px;
+      line-height: 28px;
+    }
+
+    .style-card-sub {
+      font-family: var(--st-font);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--st-text-tertiary);
+      letter-spacing: -0.24px;
+      line-height: 1.4;
+    }
+
+    .live-text {
+      font-family: var(--st-font);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--st-text-secondary);
+      line-height: 1.4;
+    }
+
+    /* === Bottom section === */
+    .bottom-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* === Browser bar === */
+    .browser-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 16px 16px;
+      width: 100%;
+    }
+
+    .browser-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 24px;
+      background: rgba(21,21,21,0.8);
+      border: 1px solid var(--st-glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(12px);
+      flex-shrink: 0;
+      box-shadow: 0 2px 40px rgba(0,0,0,0.1);
+    }
+
+    .browser-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .url-bar {
+      width: 234px;
+      height: 48px;
+      border-radius: 24px;
+      background: rgba(21,21,21,0.8);
+      border: 1px solid var(--st-glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(12px);
+      color: white;
+      font-family: -apple-system, 'SF Pro', system-ui, sans-serif;
+      font-size: 17px;
+      font-weight: 510;
+      box-shadow: 0 2px 40px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="bg-glow"></div>
+
+    <div class="topnav">
+      <div class="logo">SWIPEY</div>
+    </div>
+
+    <div class="content">
+      <div class="title-section">
+        <div class="title">
+          <span class="accent">Who</span> do you<br>want to meet?
+        </div>
+      </div>
+
+      <!-- @snippet:html -->
+      <div class="cards-section">
+        <div class="cards-row">
+          <div class="style-card">
+            <div class="style-card-inner">
+              <img class="style-card-img" src="assets/card-1.jpg" alt="">
+              <div class="style-card-overlay">
+                <div class="style-card-name">Realistic</div>
+                <div class="style-card-sub">24 girls are waiting</div>
+              </div>
+            </div>
+          </div>
+          <div class="style-card">
+            <div class="style-card-inner">
+              <img class="style-card-img" src="assets/card-3.png" alt="">
+              <div class="style-card-overlay">
+                <div class="style-card-name">Anime</div>
+                <div class="style-card-sub">20 girls are waiting</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="live-indicator">
+          <div class="live-dot-wrapper">
+            <div class="live-dot"></div>
+          </div>
+          <span class="live-text">732 people are matching now</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-section">
+      <div class="tap-label">
+        <div class="tap-label-icon">
+          <svg viewBox="0 0 12.25 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.375 1.75C4.375 1.509 4.572 1.313 4.813 1.313C5.053 1.313 5.25 1.509 5.25 1.75V5.469C5.25 5.75 5.431 6.002 5.699 6.092C5.967 6.182 6.262 6.089 6.432 5.865C6.514 5.759 6.639 5.69 6.782 5.69C7.022 5.69 7.219 5.887 7.219 6.128C7.219 6.409 7.399 6.661 7.667 6.751C7.935 6.841 8.231 6.748 8.4 6.524C8.482 6.418 8.608 6.349 8.75 6.349C8.964 6.349 9.141 6.502 9.18 6.705C9.223 6.929 9.379 7.118 9.592 7.197C9.806 7.276 10.049 7.241 10.23 7.098C10.303 7.041 10.396 7.005 10.5 7.005C10.741 7.005 10.938 7.202 10.938 7.443V7.88V10.719C10.938 11.807 10.057 12.688 8.969 12.688H7.438H5.805H5.781C4.758 12.688 3.801 12.176 3.232 11.323L1.387 8.556C1.253 8.354 1.307 8.083 1.507 7.949C1.707 7.815 1.98 7.87 2.114 8.069L3.172 9.658C3.333 9.898 3.632 10.005 3.908 9.923C4.184 9.841 4.373 9.584 4.373 9.294V8.75V1.75H4.375M4.813 0C3.848 0 3.063 0.785 3.063 1.75V7.156C2.494 6.508 1.518 6.366 0.78 6.855C-0.024 7.394 -0.243 8.479 0.296 9.283L2.141 12.053C2.953 13.27 4.318 14 5.781 14H5.805H7.438H8.969C10.782 14 12.25 12.532 12.25 10.719V7.875V7.438C12.25 6.472 11.466 5.688 10.5 5.688C10.377 5.688 10.26 5.701 10.145 5.723C9.825 5.302 9.319 5.031 8.75 5.031C8.562 5.031 8.381 5.061 8.212 5.116C7.894 4.668 7.372 4.375 6.782 4.375C6.708 4.375 6.634 4.38 6.563 4.389V1.75C6.563 0.785 5.778 0 4.813 0Z" fill="#d9d1dc"/>
+          </svg>
+        </div>
+        <span class="tap-label-text">Tap a style to select</span>
+      </div>
+
+      <div class="browser-bar">
+        <div class="browser-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <div class="url-bar">swipey.ai</div>
+        <div class="browser-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="6" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="18" r="1"/></svg>
+        </div>
+      </div>
+    </div>
+    <!-- @snippet:end -->
+  </div>
+</body>
+</html>
