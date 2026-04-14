@@ -3,3 +3,4 @@
 .playwright-mcp/
 .mcp.json
 *.png
+!downloads/**/assets/*.png
