@@ -15,6 +15,9 @@
 ├── styles.css          # Тёмная тема
 ├── catalog.js          # Навигация, replay, copy, download
 ├── downloads/          # Standalone HTML-файлы (источник правды)
+│   ├── explicit-quiz/
+│   │   ├── assets/
+│   │   └── generating.html
 │   ├── live-now/
 │   │   ├── chat-button-animation.html
 │   │   └── content-to-counter.html
