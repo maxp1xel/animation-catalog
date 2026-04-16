@@ -1,428 +1,601 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Generating — Explicit Quiz</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
-    <style>
-        /* === Reset === */
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Generating — Explicit Quiz</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            /* === Reset === */
+            *,
+            *::before,
+            *::after {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-        /* @snippet:css */
-        @property --shimmer-angle {
-            syntax: "<angle>";
-            initial-value: 0deg;
-            inherits: false;
-        }
+            /* @snippet:css */
+            @property --shimmer-angle {
+                syntax: "<angle>";
+                initial-value: 0deg;
+                inherits: false;
+            }
 
-        :root {
-            --gen-bg: #110c15;
-            --gen-grad-start: #B14CEE;
-            --gen-grad-end: #8049F3;
-            --gen-shimmer-speed: 2.5s;
-            --gen-progress-dur: 6s;
-            --gen-fade: 0.5s;
-        }
+            :root {
+                --gen-bg: #110c15;
+                --gen-grad-start: #b14cee;
+                --gen-grad-end: #8049f3;
+                --gen-shimmer-speed: 2.5s;
+                --gen-progress-dur: 6s;
+                --gen-fade: 0.5s;
+            }
 
-        @keyframes shimmer-rotate {
-            to { --shimmer-angle: 360deg; }
-        }
+            @keyframes shimmer-rotate {
+                to {
+                    --shimmer-angle: 360deg;
+                }
+            }
 
-        @keyframes progress-fill {
-            from { width: 0%; }
-            to { width: 100%; }
-        }
+            @keyframes progress-fill {
+                from {
+                    width: 0%;
+                }
+                to {
+                    width: 100%;
+                }
+            }
 
-        @keyframes button-pop {
-            0%   { transform: scale(0.85); }
-            50%  { transform: scale(1.08); }
-            100% { transform: scale(1); }
-        }
+            @keyframes button-pop {
+                0% {
+                    transform: scale(0.85);
+                }
+                50% {
+                    transform: scale(1.03);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
 
-        @keyframes star-fly {
-            0%   { transform: translateX(0) scale(0.6); opacity: 0; }
-            8%   { opacity: 1; }
-            70%  { opacity: 0.6; }
-            100% { transform: translateX(-60px) scale(1); opacity: 0; }
-        }
+            @keyframes star-fly {
+                0% {
+                    transform: translateX(0) scale(0.6);
+                    opacity: 0;
+                }
+                8% {
+                    opacity: 1;
+                }
+                70% {
+                    opacity: 0.6;
+                }
+                100% {
+                    transform: translateX(-60px) scale(1);
+                    opacity: 0;
+                }
+            }
 
-        /* === Phone Frame === */
-        .gen-phone {
-            width: 375px;
-            height: 812px;
-            border-radius: 44px;
-            background: var(--gen-bg);
-            border: 2px solid #333;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.6),
-                        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 80px;
-            gap: 24px;
-        }
+            /* === Phone Frame === */
+            .gen-phone {
+                width: 375px;
+                height: 812px;
+                border-radius: 44px;
+                background: var(--gen-bg);
+                border: 2px solid #333;
+                position: relative;
+                overflow: hidden;
+                box-shadow:
+                    0 0 40px rgba(0, 0, 0, 0.6),
+                    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding-top: 80px;
+                gap: 24px;
+            }
 
-        /* === Photo Container === */
-        .gen-photo-wrap {
-            width: 316px;
-            height: 524px;
-            border-radius: 26px;
-            position: relative;
-            flex-shrink: 0;
-        }
+            /* === Photo Container === */
+            .gen-photo-wrap {
+                width: 316px;
+                height: 524px;
+                border-radius: 26px;
+                position: relative;
+                flex-shrink: 0;
+            }
 
-        /* === Shimmer Border === */
-        .gen-shimmer {
-            position: absolute;
-            inset: 0;
-            border-radius: 26px;
-            padding: 2px;
-            background: conic-gradient(
-                from var(--shimmer-angle),
-                transparent 0%,
-                #8b4af2 10%,
-                #e879f9 20%,
-                #8b4af2 30%,
-                transparent 40%,
-                transparent 100%
-            );
-            animation: shimmer-rotate var(--gen-shimmer-speed) linear infinite;
-            -webkit-mask: linear-gradient(#000 0 0) content-box,
-                          linear-gradient(#000 0 0);
-            -webkit-mask-composite: xor;
-            mask: linear-gradient(#000 0 0) content-box,
-                  linear-gradient(#000 0 0);
-            mask-composite: exclude;
-            pointer-events: none;
-            z-index: 2;
-            transition: opacity var(--gen-fade) ease;
-        }
+            /* === Shimmer Border === */
+            .gen-shimmer {
+                position: absolute;
+                inset: 0;
+                border-radius: 26px;
+                padding: 2px;
+                background: conic-gradient(
+                    from var(--shimmer-angle),
+                    transparent 0%,
+                    #8b4af2 10%,
+                    #e879f9 20%,
+                    #8b4af2 30%,
+                    transparent 40%,
+                    transparent 100%
+                );
+                animation: shimmer-rotate var(--gen-shimmer-speed) linear
+                    infinite;
+                -webkit-mask:
+                    linear-gradient(#000 0 0) content-box,
+                    linear-gradient(#000 0 0);
+                -webkit-mask-composite: xor;
+                mask:
+                    linear-gradient(#000 0 0) content-box,
+                    linear-gradient(#000 0 0);
+                mask-composite: exclude;
+                pointer-events: none;
+                z-index: 2;
+                transition: opacity var(--gen-fade) ease;
+            }
 
-        .gen-shimmer::after {
-            content: "";
-            position: absolute;
-            inset: -4px;
-            border-radius: 30px;
-            padding: 2px;
-            background: conic-gradient(
-                from var(--shimmer-angle),
-                transparent 0%,
-                #8b4af2 10%,
-                #e879f9 20%,
-                #8b4af2 30%,
-                transparent 40%,
-                transparent 100%
-            );
-            opacity: 0.4;
-            filter: blur(12px);
-            z-index: -1;
-        }
+            .gen-shimmer::after {
+                content: "";
+                position: absolute;
+                inset: -4px;
+                border-radius: 30px;
+                padding: 2px;
+                background: conic-gradient(
+                    from var(--shimmer-angle),
+                    transparent 0%,
+                    #8b4af2 10%,
+                    #e879f9 20%,
+                    #8b4af2 30%,
+                    transparent 40%,
+                    transparent 100%
+                );
+                opacity: 0.4;
+                filter: blur(12px);
+                z-index: -1;
+            }
 
-        /* === Photo + Video === */
-        .gen-photo {
-            position: absolute;
-            inset: 2px;
-            border-radius: 24px;
-            overflow: hidden;
-            z-index: 1;
-        }
+            /* === Photo + Video === */
+            .gen-photo {
+                position: absolute;
+                inset: 2px;
+                border-radius: 24px;
+                overflow: hidden;
+                z-index: 1;
+            }
 
-        .gen-photo img,
-        .gen-photo video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
+            .gen-photo img,
+            .gen-photo video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
 
-        .gen-photo video {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-        }
+            .gen-photo video {
+                position: absolute;
+                inset: 0;
+                opacity: 0;
+            }
 
-        /* === Photo Overlay (name + tags) === */
-        .gen-photo-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 16px;
-            background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.8));
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            border-radius: 0 0 11px 12px;
-            transition: opacity var(--gen-fade) ease;
-        }
+            /* === Photo Overlay (name + tags) === */
+            .gen-photo-overlay {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                padding: 16px;
+                background: linear-gradient(
+                    to bottom,
+                    rgba(0, 0, 0, 0),
+                    rgba(0, 0, 0, 0.8)
+                );
+                z-index: 2;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                border-radius: 0 0 11px 12px;
+                transition: opacity var(--gen-fade) ease;
+            }
 
-        .gen-photo-name {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 28px;
-            color: #e9f2ff;
-            letter-spacing: -0.56px;
-            line-height: 1.3;
-        }
+            .gen-photo-name {
+                font-family: "Poppins", sans-serif;
+                font-weight: 600;
+                font-size: 28px;
+                color: #e9f2ff;
+                letter-spacing: -0.56px;
+                line-height: 1.3;
+            }
 
-        .gen-photo-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
+            .gen-photo-tags {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
 
-        .gen-tag {
-            height: 24px;
-            padding: 4px 12px;
-            border-radius: 36px;
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: 0 0 20.78px rgba(0, 0, 0, 0.09),
-                        0 0 127.875px rgba(0, 0, 0, 0.18);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            font-family: 'Poppins', sans-serif;
-            font-weight: 500;
-            font-size: 12px;
-            color: white;
-            line-height: 1.4;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+            .gen-tag {
+                height: 24px;
+                padding: 4px 12px;
+                border-radius: 36px;
+                background: rgba(255, 255, 255, 0.12);
+                border: 1px solid rgba(255, 255, 255, 0.06);
+                box-shadow:
+                    0 0 20.78px rgba(0, 0, 0, 0.09),
+                    0 0 127.875px rgba(0, 0, 0, 0.18);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                font-family: "Poppins", sans-serif;
+                font-weight: 500;
+                font-size: 12px;
+                color: white;
+                line-height: 1.4;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
 
-        /* === Bottom Section (grid overlap for loading / button) === */
-        .gen-bottom {
-            display: grid;
-            justify-items: center;
-            align-items: start;
-            width: 312px;
-        }
+            /* === Bottom Section (grid overlap for loading / button) === */
+            .gen-bottom {
+                display: grid;
+                justify-items: center;
+                align-items: start;
+                width: 312px;
+            }
 
-        .gen-loading,
-        .gen-button {
-            grid-row: 1;
-            grid-column: 1;
-        }
+            .gen-loading,
+            .gen-button {
+                grid-row: 1;
+                grid-column: 1;
+            }
 
-        .gen-loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            transition: opacity var(--gen-fade) ease;
-        }
+            .gen-loading {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+                width: 100%;
+                transition: opacity var(--gen-fade) ease;
+            }
 
-        /* === Progress Bar === */
-        .gen-progress {
-            width: 312px;
-            height: 20px;
-            border-radius: 32px;
-            background: rgba(255, 255, 255, 0.22);
-            overflow: hidden;
-        }
+            /* === Progress Bar === */
+            .gen-progress {
+                width: 312px;
+                height: 20px;
+                border-radius: 32px;
+                background: rgba(255, 255, 255, 0.22);
+                overflow: hidden;
+            }
 
-        .gen-progress-fill {
-            height: 100%;
-            border-radius: 16px;
-            background: linear-gradient(141deg, var(--gen-grad-start), var(--gen-grad-end));
-            box-shadow: 0 5px 26px rgba(104, 26, 199, 0.61),
-                        0 1px 4.2px rgba(104, 26, 199, 0.31);
-            animation: progress-fill var(--gen-progress-dur) linear forwards;
-            position: relative;
-            overflow: hidden;
-        }
+            .gen-progress-fill {
+                height: 100%;
+                border-radius: 16px;
+                background: linear-gradient(
+                    141deg,
+                    var(--gen-grad-start),
+                    var(--gen-grad-end)
+                );
+                box-shadow:
+                    0 5px 26px rgba(104, 26, 199, 0.61),
+                    0 1px 4.2px rgba(104, 26, 199, 0.31);
+                animation: progress-fill var(--gen-progress-dur) linear forwards;
+                position: relative;
+                overflow: hidden;
+            }
 
-        .gen-progress-glow {
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: 48px;
-            height: 100%;
-        }
+            .gen-progress-glow {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 48px;
+                height: 100%;
+            }
 
-        .gen-progress-glow-blur {
-            position: absolute;
-            inset: 0;
-            border-radius: 0 16px 16px 0;
-            filter: blur(3px);
-            background: radial-gradient(ellipse at right center,
-                rgba(255, 255, 255, 0.35), transparent 70%);
-        }
+            .gen-progress-glow-blur {
+                position: absolute;
+                inset: 0;
+                border-radius: 0 16px 16px 0;
+                filter: blur(3px);
+                background: radial-gradient(
+                    ellipse at right center,
+                    rgba(255, 255, 255, 0.35),
+                    transparent 70%
+                );
+            }
 
-        .gen-progress-glow-sharp {
-            position: absolute;
-            inset: 0;
-            border-radius: 0 16px 16px 0;
-            background: radial-gradient(ellipse at right center,
-                rgba(255, 255, 255, 0.2), transparent 70%);
-        }
+            .gen-progress-glow-sharp {
+                position: absolute;
+                inset: 0;
+                border-radius: 0 16px 16px 0;
+                background: radial-gradient(
+                    ellipse at right center,
+                    rgba(255, 255, 255, 0.2),
+                    transparent 70%
+                );
+            }
 
-        .gen-progress-sparkle {
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: 48px;
-            height: 100%;
-            background: url("assets/edge-sparkle.svg") right center/contain no-repeat;
-        }
+            .gen-progress-sparkle {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 48px;
+                height: 100%;
+                background: url("assets/edge-sparkle.svg") right center/contain
+                    no-repeat;
+            }
 
-        .gen-star {
-            position: absolute;
-            right: var(--star-r, 20px);
-            top: var(--star-t, 8px);
-            width: var(--star-s, 4px);
-            height: var(--star-s, 4px);
-            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 0L3.324 1.244C3.506 1.946 4.054 2.494 4.756 2.676L6 3L4.756 3.324C4.054 3.506 3.506 4.054 3.324 4.756L3 6L2.676 4.756C2.494 4.054 1.946 3.506 1.244 3.324L0 3L1.244 2.676C1.946 2.494 2.494 1.946 2.676 1.244L3 0Z' fill='white' fill-opacity='0.9'/%3E%3C/svg%3E") center/contain no-repeat;
-            animation: star-fly var(--star-dur, 1.5s) cubic-bezier(0.4, 0, 1, 1) infinite;
-            animation-delay: var(--star-del, 0s);
-            opacity: 0;
-        }
+            .gen-star {
+                position: absolute;
+                right: var(--star-r, 20px);
+                top: var(--star-t, 8px);
+                width: var(--star-s, 4px);
+                height: var(--star-s, 4px);
+                background: url("data:image/svg+xml,%3Csvg viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 0L3.324 1.244C3.506 1.946 4.054 2.494 4.756 2.676L6 3L4.756 3.324C4.054 3.506 3.506 4.054 3.324 4.756L3 6L2.676 4.756C2.494 4.054 1.946 3.506 1.244 3.324L0 3L1.244 2.676C1.946 2.494 2.494 1.946 2.676 1.244L3 0Z' fill='white' fill-opacity='0.9'/%3E%3C/svg%3E")
+                    center/contain no-repeat;
+                animation: star-fly var(--star-dur, 1.5s)
+                    cubic-bezier(0.4, 0, 1, 1) infinite;
+                animation-delay: var(--star-del, 0s);
+                opacity: 0;
+            }
 
-        /* === Status Text === */
-        .gen-status {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 500;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.5);
-            letter-spacing: -0.14px;
-            text-align: center;
-            line-height: 1.4;
-            transition: opacity 0.3s ease;
-        }
+            /* === Status Text === */
+            .gen-status {
+                font-family: "Poppins", sans-serif;
+                font-weight: 500;
+                font-size: 14px;
+                color: rgba(255, 255, 255, 0.5);
+                letter-spacing: -0.14px;
+                text-align: center;
+                line-height: 1.4;
+                transition: opacity 0.3s ease;
+            }
 
-        /* === Button === */
-        .gen-button {
-            align-self: center;
-            width: 240px;
-            height: 44px;
-            border-radius: 16px;
-            background: linear-gradient(130deg, var(--gen-grad-start), var(--gen-grad-end));
-            box-shadow: 0 5px 26px rgba(104, 26, 199, 0.61),
-                        0 1px 4.2px rgba(104, 26, 199, 0.31);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 500;
-            font-size: 14px;
-            color: white;
-            letter-spacing: -0.14px;
-            border: none;
-            cursor: pointer;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity var(--gen-fade) ease 0.3s;
-        }
+            /* === Button === */
+            .gen-button {
+                align-self: center;
+                width: 240px;
+                height: 44px;
+                border-radius: 16px;
+                background: linear-gradient(
+                    130deg,
+                    var(--gen-grad-start),
+                    var(--gen-grad-end)
+                );
+                box-shadow:
+                    0 5px 26px rgba(104, 26, 199, 0.61),
+                    0 1px 4.2px rgba(104, 26, 199, 0.31);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: "Poppins", sans-serif;
+                font-weight: 500;
+                font-size: 14px;
+                color: white;
+                letter-spacing: -0.14px;
+                border: none;
+                cursor: pointer;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity var(--gen-fade) ease 0.3s;
+            }
 
-        /* === Complete State === */
-        .gen-phone.complete .gen-shimmer        { opacity: 0; animation: none; }
-        .gen-phone.complete .gen-loading  { opacity: 0; pointer-events: none; }
-        .gen-phone.complete .gen-progress-fill { animation: none; width: 100%; }
-        .gen-phone.complete .gen-star     { animation: none; }
-        .gen-phone.complete .gen-photo video { opacity: 1; }
-        .gen-phone.complete .gen-button   { opacity: 1; pointer-events: auto; animation: button-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both; }
-        /* @snippet:end */
+            /* === Complete State === */
+            .gen-phone.complete .gen-shimmer {
+                opacity: 0;
+                animation: none;
+            }
+            .gen-phone.complete .gen-loading {
+                opacity: 0;
+                pointer-events: none;
+            }
+            .gen-phone.complete .gen-progress-fill {
+                animation: none;
+                width: 100%;
+            }
+            .gen-phone.complete .gen-star {
+                animation: none;
+            }
+            .gen-phone.complete .gen-photo video {
+                opacity: 1;
+            }
+            .gen-phone.complete .gen-button {
+                opacity: 1;
+                pointer-events: auto;
+                animation: button-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)
+                    0.3s both;
+            }
+            /* @snippet:end */
 
-        /* === Layout === */
-        body {
-            background: #0d0d1a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-    </style>
-</head>
-<body>
-    <div class="gen-phone" id="genRoot">
-        <!-- @snippet:html -->
-        <div class="gen-photo-wrap">
-            <div class="gen-shimmer"></div>
-            <div class="gen-photo">
-                <img src="assets/girl-photo.jpg" alt="">
-                <video src="assets/aigirlfriend_2.mp4"
-                       loop muted playsinline preload="auto"></video>
-                <div class="gen-photo-overlay">
-                    <div class="gen-photo-name">Kira, 22</div>
-                    <div class="gen-photo-tags">
-                        <span class="gen-tag">Teen</span>
-                        <span class="gen-tag">Caucasian</span>
-                        <span class="gen-tag">Curvy</span>
-                        <span class="gen-tag">Submissive</span>
-                        <span class="gen-tag">Girlfriend</span>
-                        <span class="gen-tag">POV</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="gen-bottom">
-            <div class="gen-loading">
-                <div class="gen-progress">
-                    <div class="gen-progress-fill">
-                        <div class="gen-progress-glow">
-                            <div class="gen-progress-glow-blur"></div>
-                            <div class="gen-progress-glow-sharp"></div>
-                            <div class="gen-progress-sparkle"></div>
+            /* === Layout === */
+            body {
+                background: #0d0d1a;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="gen-phone" id="genRoot">
+            <!-- @snippet:html -->
+            <div class="gen-photo-wrap">
+                <div class="gen-shimmer"></div>
+                <div class="gen-photo">
+                    <img src="assets/girl-photo.jpg" alt="" />
+                    <video
+                        src="assets/aigirlfriend_2.mp4"
+                        loop
+                        muted
+                        playsinline
+                        preload="auto"
+                    ></video>
+                    <div class="gen-photo-overlay">
+                        <div class="gen-photo-name">Kira, 22</div>
+                        <div class="gen-photo-tags">
+                            <span class="gen-tag">Teen</span>
+                            <span class="gen-tag">Caucasian</span>
+                            <span class="gen-tag">Curvy</span>
+                            <span class="gen-tag">Submissive</span>
+                            <span class="gen-tag">Girlfriend</span>
+                            <span class="gen-tag">POV</span>
                         </div>
-                        <span class="gen-star" style="--star-r:3px;--star-t:2px;--star-s:6px;--star-dur:1.0s;--star-del:0s"></span>
-                        <span class="gen-star" style="--star-r:12px;--star-t:7px;--star-s:5px;--star-dur:1.3s;--star-del:0.4s"></span>
-                        <span class="gen-star" style="--star-r:22px;--star-t:13px;--star-s:3px;--star-dur:0.9s;--star-del:0.7s"></span>
-                        <span class="gen-star" style="--star-r:8px;--star-t:4px;--star-s:4px;--star-dur:1.1s;--star-del:1.0s"></span>
-                        <span class="gen-star" style="--star-r:30px;--star-t:9px;--star-s:6px;--star-dur:1.4s;--star-del:0.2s"></span>
-                        <span class="gen-star" style="--star-r:5px;--star-t:15px;--star-s:3px;--star-dur:1.0s;--star-del:1.2s"></span>
-                        <span class="gen-star" style="--star-r:18px;--star-t:1px;--star-s:2px;--star-dur:1.2s;--star-del:0.5s"></span>
-                        <span class="gen-star" style="--star-r:25px;--star-t:11px;--star-s:4px;--star-dur:0.8s;--star-del:0.9s"></span>
-                        <span class="gen-star" style="--star-r:10px;--star-t:6px;--star-s:3px;--star-dur:1.3s;--star-del:1.5s"></span>
-                        <span class="gen-star" style="--star-r:35px;--star-t:14px;--star-s:5px;--star-dur:1.1s;--star-del:0.1s"></span>
                     </div>
                 </div>
-                <p class="gen-status" id="genStatus">Analyzing your desires…</p>
             </div>
-            <button class="gen-button">Start Fucking</button>
+
+            <div class="gen-bottom">
+                <div class="gen-loading">
+                    <div class="gen-progress">
+                        <div class="gen-progress-fill">
+                            <div class="gen-progress-glow">
+                                <div class="gen-progress-glow-blur"></div>
+                                <div class="gen-progress-glow-sharp"></div>
+                                <div class="gen-progress-sparkle"></div>
+                            </div>
+                            <span
+                                class="gen-star"
+                                style="
+                                    --star-r: 3px;
+                                    --star-t: 2px;
+                                    --star-s: 6px;
+                                    --star-dur: 1s;
+                                    --star-del: 0s;
+                                "
+                            ></span>
+                            <span
+                                class="gen-star"
+                                style="
+                                    --star-r: 12px;
+                                    --star-t: 7px;
+                                    --star-s: 5px;
+                                    --star-dur: 1.3s;
+                                    --star-del: 0.4s;
+                                "
+                            ></span>
+                            <span
+                                class="gen-star"
+                                style="
+                                    --star-r: 22px;
+                                    --star-t: 13px;
+                                    --star-s: 3px;
+                                    --star-dur: 0.9s;
+                                    --star-del: 0.7s;
+                                "
+                            ></span>
+                            <span
+                                class="gen-star"
+                                style="
+                                    --star-r: 8px;
+                                    --star-t: 4px;
+                                    --star-s: 4px;
+                                    --star-dur: 1.1s;
+                                    --star-del: 1s;
+                                "
+                            ></span>
+                            <span
+                                class="gen-star"
+                                style="
+                                    --star-r: 30px;
+                                    --star-t: 9px;
+                                    --star-s: 6px;
+                                    --star-dur: 1.4s;
+                                    --star-del: 0.2s;
+                                "
+                            ></span>
+                            <span
+                                class="gen-star"
+                                style="
+                                    --star-r: 5px;
+                                    --star-t: 15px;
+                                    --star-s: 3px;
+                                    --star-dur: 1s;
+                                    --star-del: 1.2s;
+                                "
+                            ></span>
+                            <span
+                                class="gen-star"
+                                style="
+                                    --star-r: 18px;
+                                    --star-t: 1px;
+                                    --star-s: 2px;
+                                    --star-dur: 1.2s;
+                                    --star-del: 0.5s;
+                                "
+                            ></span>
+                            <span
+                                class="gen-star"
+                                style="
+                                    --star-r: 25px;
+                                    --star-t: 11px;
+                                    --star-s: 4px;
+                                    --star-dur: 0.8s;
+                                    --star-del: 0.9s;
+                                "
+                            ></span>
+                            <span
+                                class="gen-star"
+                                style="
+                                    --star-r: 10px;
+                                    --star-t: 6px;
+                                    --star-s: 3px;
+                                    --star-dur: 1.3s;
+                                    --star-del: 1.5s;
+                                "
+                            ></span>
+                            <span
+                                class="gen-star"
+                                style="
+                                    --star-r: 35px;
+                                    --star-t: 14px;
+                                    --star-s: 5px;
+                                    --star-dur: 1.1s;
+                                    --star-del: 0.1s;
+                                "
+                            ></span>
+                        </div>
+                    </div>
+                    <p class="gen-status" id="genStatus">
+                        Analyzing your desires…
+                    </p>
+                </div>
+                <button class="gen-button">Start Fucking</button>
+            </div>
+            <!-- @snippet:end -->
         </div>
-        <!-- @snippet:end -->
-    </div>
 
-    <script>
-        (function () {
-            var root = document.getElementById('genRoot');
-            var status = document.getElementById('genStatus');
-            var video = root.querySelector('video');
-            var messages = [
-                'Analyzing your desires\u2026',
-                'Crafting her personality\u2026',
-                'Designing her look\u2026'
-            ];
-            var step = 0;
+        <script>
+            (function () {
+                var root = document.getElementById("genRoot");
+                var status = document.getElementById("genStatus");
+                var video = root.querySelector("video");
+                var messages = [
+                    "Analyzing your desires\u2026",
+                    "Crafting her personality\u2026",
+                    "Designing her look\u2026",
+                ];
+                var step = 0;
 
-            var tid = setInterval(function () {
-                step++;
-                if (step >= messages.length) { clearInterval(tid); return; }
-                status.style.opacity = '0';
+                var tid = setInterval(function () {
+                    step++;
+                    if (step >= messages.length) {
+                        clearInterval(tid);
+                        return;
+                    }
+                    status.style.opacity = "0";
+                    setTimeout(function () {
+                        status.textContent = messages[step];
+                        status.style.opacity = "1";
+                    }, 300);
+                }, 2000);
+
                 setTimeout(function () {
-                    status.textContent = messages[step];
-                    status.style.opacity = '1';
-                }, 300);
-            }, 2000);
-
-            setTimeout(function () {
-                root.classList.add('complete');
-                video.play().catch(function () {});
-            }, 6000);
-        })();
-    </script>
-</body>
+                    root.classList.add("complete");
+                    video.play().catch(function () {});
+                }, 6000);
+            })();
+        </script>
+    </body>
 </html>
