@@ -44,7 +44,7 @@
             0%   { transform: translateX(0) scale(0.6); opacity: 0; }
             8%   { opacity: 1; }
             70%  { opacity: 0.6; }
-            100% { transform: translateX(60px) scale(1); opacity: 0; }
+            100% { transform: translateX(-60px) scale(1); opacity: 0; }
         }
 
         /* === Phone Frame === */
@@ -142,7 +142,6 @@
             position: absolute;
             inset: 0;
             opacity: 0;
-            transition: opacity var(--gen-fade) ease 0.3s;
         }
 
         /* === Photo Overlay (name + tags) === */
@@ -251,19 +250,17 @@
             position: absolute;
             inset: 0;
             border-radius: 0 16px 16px 0;
-            border: 1px solid rgba(255, 255, 255, 0.6);
             filter: blur(3px);
             background: radial-gradient(ellipse at right center,
-                rgba(255, 255, 255, 0.25), transparent 70%);
+                rgba(255, 255, 255, 0.35), transparent 70%);
         }
 
         .gen-progress-glow-sharp {
             position: absolute;
             inset: 0;
             border-radius: 0 16px 16px 0;
-            border: 1px solid rgba(255, 255, 255, 0.3);
             background: radial-gradient(ellipse at right center,
-                rgba(255, 255, 255, 0.15), transparent 70%);
+                rgba(255, 255, 255, 0.2), transparent 70%);
         }
 
         .gen-progress-sparkle {
@@ -325,7 +322,6 @@
 
         /* === Complete State === */
         .gen-phone.complete .gen-shimmer        { opacity: 0; animation: none; }
-        .gen-phone.complete .gen-photo-overlay  { opacity: 0; }
         .gen-phone.complete .gen-loading  { opacity: 0; pointer-events: none; }
         .gen-phone.complete .gen-progress-fill { animation: none; width: 100%; }
         .gen-phone.complete .gen-star     { animation: none; }
