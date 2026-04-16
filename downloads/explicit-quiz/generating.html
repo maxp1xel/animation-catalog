@@ -245,8 +245,10 @@
         }
 
         /* === Complete State === */
-        .gen-phone.complete .gen-shimmer  { opacity: 0; }
+        .gen-phone.complete .gen-shimmer  { opacity: 0; animation: none; }
         .gen-phone.complete .gen-loading  { opacity: 0; pointer-events: none; }
+        .gen-phone.complete .gen-progress-fill { animation: none; width: 100%; }
+        .gen-phone.complete .gen-star     { animation: none; }
         .gen-phone.complete .gen-photo video { opacity: 1; }
         .gen-phone.complete .gen-button   { opacity: 1; pointer-events: auto; }
         /* @snippet:end */
